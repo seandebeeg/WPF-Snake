@@ -1,0 +1,41 @@
+﻿<Page x:Class="WindowsSnake.ModInfo"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WindowsSnake"
+      mc:Ignorable="d" 
+      d:DesignHeight="732" d:DesignWidth="700"
+      Title="Modifier Info">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="4*"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <TextBlock Grid.Row="0" Text="Modifier Info" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="/Assets/SnakeDemo-lgEeD.otf#Snake Demo"/>
+    <StackPanel Grid.Row="1" HorizontalAlignment="Center" CanVerticallyScroll="True">
+      <TextBlock Text="Easy" FontSize="20"/>
+      <TextBlock Text="Slowness (-0.5x), Halves Speed" Margin="20,5,0,0"/>
+      <TextBlock Text="Big Board (-0.35x) Makes Board 75% Bigger" Margin="20,5,0,0"/>
+      <TextBlock Text="Overlap (-0.25x) Allows you to overlap without dying" Margin="20,5,0,0"/>
+      <TextBlock Text="Multiple Apples (-0.2x) More Apples to chew" Margin="20,5,0,0"/>
+      <TextBlock Text="Invincibility (-1000x) Makes you unkillable" Margin="20,5,0,0"/>
+      <TextBlock Text="Hard" FontSize="20"/>
+      <TextBlock Text="Fast Speed (+0.35x) doubles your speed" Margin="20,5,0,0"/>
+      <TextBlock Text="Small Board (+0.25x) halves board size" Margin="20,5,0,0"/>
+      <TextBlock Text="Decoy Apples (+0.35x) Shows fake apples on the board" Margin="20,5,0,0"/>
+      <TextBlock Text="Speed Boost Every 5 Points (+0.45x)" Margin="20,5,0,0"/>
+      <TextBlock Text="D.W.I (+0.5x) randomly turn every 10-12 seconds" Margin="20,5,0,0"/>
+      <TextBlock Text="INSANE" FontSize="20"/>
+      <TextBlock Text="Super Speed (+0.85x) quadruples speed" Margin="20,5,0,0"/>
+      <TextBlock Text="Tiny Board (+0.5x) quarters the board" Margin="20,5,0,0"/>
+      <TextBlock Text="Poison Apples (+0.5x) If you touch the fake apples you die" Margin="20,0,0,0"/>
+      <TextBlock Text="Double Growth (+0.75)" Margin="20,5,0,0"/>
+      <TextBlock Text="Speed Boost Every Point (+0.9x)" Margin="20,5,0,0"/>
+      <TextBlock Text="D.U.I (+1.0x) randomly turn every 3-4 seconds" Margin="20,5,0,0"/>
+    </StackPanel>
+    <Button Grid.Row="2" Height="38px" Width="100px" Content="Back to Modifiers" Click="Modifiers_Click"/>
+  </Grid>
+</Page>
