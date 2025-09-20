@@ -6,24 +6,42 @@
       xmlns:local="clr-namespace:WindowsSnake"
       mc:Ignorable="d" 
       d:DesignHeight="732" d:DesignWidth="700"
-      Title="ScoresPage">
+      Title="ScoresPage"
+      SizeChanged="ChangeListViewSize">
 
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="*"/>
-      <RowDefinition Height="2*"/>
+      <RowDefinition Height="5*"/>
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <TextBlock Text="Scores" FontFamily="/Assets/SnakeDemo-lgEeD.otf#Snake Demo" HorizontalAlignment="Center" FontSize="50" Grid.Row="0"/>
-    <ListView x:Name="ScoresListView"  Grid.Row="1">
+    <ListView x:Name="ScoresListView"  Grid.Row="1" BorderBrush="Black" FontFamily="Microsoft JhengHei" FontSize="30" Foreground="black" Margin="0,0,0,30" HorizontalAlignment="Center"  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+      <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem">
+          <Setter Property="HorizontalContentAlignment" Value="Center"/>
+          <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter Property="Opacity" Value="0.8"/>
+              <Setter Property="Background" Value="White"/>
+              <Setter Property="BorderBrush" Value="White"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter Property="Opacity" Value="0.6"/>
+              <Setter Property="Background" Value="white"/>
+              <Setter Property="BorderBrush" Value="White"/>
+            </Trigger>
+          </Style.Triggers>
+        </Style>
+      </ListView.ItemContainerStyle>
       <ListView.View>
         <GridView>
           <GridViewColumn Header="Score" DisplayMemberBinding="{Binding ScoreNumber}" Width="330"/>
-          <GridViewColumn Header="Date" DisplayMemberBinding="{Binding DateObtained}" Width="330"/>
+          <GridViewColumn Header="Date" DisplayMemberBinding="{Binding TimeObtained}" Width="330"/>
         </GridView>
       </ListView.View>
     </ListView>
     <Button Grid.Row="3" Content="Main Menu" Height="40px" Width="100" Click="MainMenu_Click" HorizontalAlignment="Right" Margin="0,0,15,0"/>
-    <Button Grid.Row="3" Content="Delete All" Height="40px" Width="100" HorizontalAlignment="Left" Margin="15,0,0,0"/>
+    <Button Grid.Row="3" Content="Delete All" Height="40px" Width="100" Click="DeleteAll_Click" HorizontalAlignment="Left" Margin="15,0,0,0"/>
   </Grid>
 </Page>

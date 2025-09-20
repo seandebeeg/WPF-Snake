@@ -46,11 +46,7 @@ namespace WindowsSnake
             GameSettings currentScores = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
             if (currentScores?.ScoreEntries != null)
             {
-                var sortedScores = currentScores.ScoreEntries
-                    .OrderByDescending(s => s.ScoreNumber)
-                    .ToList();
-                
-                ScoresListView.ItemsSource = sortedScores;
+                ScoresListView.ItemsSource = currentScores.ScoreEntries;
             }
             else
             {
@@ -66,6 +62,32 @@ namespace WindowsSnake
     private void MainMenu_Click(object sender, RoutedEventArgs e)
     {
       _parentWindow.MainNavigation.Navigate(new MainMenu(_parentWindow));
+    }
+
+    private void DeleteAll_Click(object sender, RoutedEventArgs e)
+    {
+      var settingsPath = Path.Combine(
+           Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+           "Snake",
+           "settings.json"
+      );
+      GameSettings currentScores = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
+
+      currentScores.ScoreEntries = null;
+      JsonSerializerOptions scoreDeletion = new JsonSerializerOptions { WriteIndented = true };
+      string updatedJsonScores = JsonSerializer.Serialize(currentScores, scoreDeletion);
+      File.WriteAllText(settingsPath, updatedJsonScores);
+
+      ScoresListView.ItemsSource = new List<Score>();
+    }
+
+    private void ChangeListViewSize(object sender, SizeChangedEventArgs e)
+    {
+      if(ScoresListView.View is GridView gridView)
+      {
+        gridView.Columns[0].Width = _parentWindow.ActualWidth / 2;
+        gridView.Columns[1].Width = _parentWindow.ActualWidth / 2;
+      }
     }
   }
 }
