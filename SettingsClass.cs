@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Media;
-
-namespace WindowsSnake
+﻿namespace WindowsSnake
 {
   public class GameSettings
   {
@@ -31,6 +22,6 @@ namespace WindowsSnake
   {
     public bool IsHighScore { get; set; }
     public int ScoreNumber { get; set; }
-    public string TimeObtained { get; set; }
+    public required string TimeObtained { get; set; }
   }
 }

@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <StartupObject>WindowsSnake.App</StartupObject>
+    <ApplicationIcon>Snake.ico</ApplicationIcon>
   </PropertyGroup>
 	<ItemGroup>
 	  <None Remove="Assets\SnakeDemo-lgEeD.otf" />
@@ -14,6 +17,7 @@
 	  <Content Include="Assets\SnakeDemo-lgEeD.otf">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
+	  <Content Include="Snake.ico" />
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25104.5739" />
