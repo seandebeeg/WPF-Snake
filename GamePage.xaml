@@ -8,7 +8,7 @@
       d:DesignHeight="732" d:DesignWidth="700"
       Title="GamePage">
 
-    <Grid>
-        
-    </Grid>
+  <Grid x:Name="GameGrid">
+    
+  </Grid>
 </Page>
