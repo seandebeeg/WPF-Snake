@@ -8,18 +8,28 @@
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <StartupObject>WindowsSnake.App</StartupObject>
-    <ApplicationIcon>Snake.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\Snake.ico</ApplicationIcon>
   </PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Assets\Snake-Close-Button.png" />
+	  <None Remove="Assets\Snake-FullScreen-Button.png" />
+	  <None Remove="Assets\Snake-Minimize-Button.png" />
+	  <None Remove="Assets\Snake-Window-Button.png" />
 	  <None Remove="Assets\SnakeDemo-lgEeD.otf" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Include="Assets\SnakeDemo-lgEeD.otf">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>
-	  <Content Include="Snake.ico" />
+	  <Content Include="Assets\Snake.ico" />
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25104.5739" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Resource Include="Assets\Snake-Close-Button.png" />
+	  <Resource Include="Assets\Snake-FullScreen-Button.png" />
+	  <Resource Include="Assets\Snake-Minimize-Button.png" />
+	  <Resource Include="Assets\Snake-Window-Button.png" />
 	</ItemGroup>
 </Project>
