@@ -16,26 +16,43 @@ namespace WindowsSnake
             _parentWindow = parentWindow;
             _parentWindow.Title = "Game";
             InitializeComponent();
-            MakeBoard();
+            RunPreGameFunctions();
         }
 
         private int[,] BoardArray;
+        private double PlayerSpeed;
 
         private static GameSettings LoadSettings()
         {
-          var modifierPath = Path.Combine(
+          var settingsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
             "Snake",
             "settings.json"
           );
-          GameSettings currentModifiers = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(modifierPath));
-          return currentModifiers;
+
+          if (File.Exists(settingsPath))
+          {
+            GameSettings currentSettings = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
+            return currentSettings;
+          }
+          else
+          {
+            GameSettings defaultSettings = new GameSettings 
+            { 
+              CurrentColor = "#FF0000FF",
+              Modifiers = null,
+              Multiplier = 1,
+              SelectedSettings = null
+            };
+            File.WriteAllText(settingsPath, JsonSerializer.Serialize(defaultSettings));
+            return defaultSettings;
+          }
         }
 
       private void MakeBoard()
       {
-        const int DefaultRows = 30;
-        const int DefaultColumns = 30;
+        const int DefaultRows = 20;
+        const int DefaultColumns = 20;
         double BoardMultiplier = 1.00;
         int RowNumber = DefaultRows;
         int ColumnNumber = DefaultColumns;
@@ -49,16 +66,16 @@ namespace WindowsSnake
               {
                 default:
                   BoardMultiplier = 1.00;
-                  break;
+                break;
                 case "Bigger Board":
                   BoardMultiplier = 1.75;
-                  break;
+                break;
                 case "Small Board":
                   BoardMultiplier = 0.5;
-                  break;
+                break;
                 case "Tiny Board":
                   BoardMultiplier = 0.25;
-                  break;
+                break;
               }
               RowNumber = ((int)(DefaultRows * BoardMultiplier));
               ColumnNumber = ((int)(DefaultColumns * BoardMultiplier));
@@ -86,7 +103,43 @@ namespace WindowsSnake
           BoardArray = new int[RowNumber, ColumnNumber];
         }
       }
-      
+
+      private void DetermineSpeed()
+      {
+        double speedMultiplier = 1;
+        double defaultSpeed = 3; // 3 columns/rows a second 
+        if(currentSettings.Modifiers != null)
+        {
+          foreach(ModifierItem Modifier in currentSettings.Modifiers)
+          {
+            if(Modifier.Name.Contains("Speed") || Modifier.Name.Contains("Slow"))
+            {
+              switch (Modifier.Name)
+              {
+                default:
+                  speedMultiplier = 1;
+                break;
+                case "Slowness":
+                  speedMultiplier = 0.5;
+                break;
+                case "Fast Speed":
+                  speedMultiplier = 2;
+                break;
+                case "Super Speed":
+                  speedMultiplier = 4;
+                break;
+              }
+              PlayerSpeed = speedMultiplier * defaultSpeed;
+            }
+          }
+        }
+      } 
       private readonly GameSettings currentSettings = LoadSettings();
+
+      private void RunPreGameFunctions()
+      {
+        MakeBoard();
+        DetermineSpeed();
+      }
     }
 }
