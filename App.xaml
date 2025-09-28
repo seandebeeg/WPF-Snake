@@ -5,5 +5,35 @@
              StartupUri="MainWindow.xaml">
   <Application.Resources>
     <FontFamily x:Key="Snake">/WindowsSnake;component/Assets/#Snake Demo</FontFamily>
+    <Style TargetType="Button" x:Key="WindowButtonTriggers">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderBrush" Value="Transparent"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Opacity" Value="0.8"/>
+          <Setter Property="Background" Value="Transparent"/>
+          <Setter Property="BorderBrush" Value="Transparent"/>
+        </Trigger>
+        <Trigger Property="IsPressed" Value="True">
+          <Setter Property="Opacity" Value="0.6"/>
+          <Setter Property="Background" Value="Transparent"/>
+          <Setter Property="BorderBrush" Value="Transparent"/>
+        </Trigger>
+        <Trigger Property="IsEnabled" Value="False">
+          <Setter Property="Opacity" Value="0.4"/>
+          <Setter Property="Background" Value="Transparent"/>
+          <Setter Property="BorderBrush" Value="Transparent"/>
+        </Trigger>
+      </Style.Triggers>
+    </Style>
   </Application.Resources>
 </Application>
