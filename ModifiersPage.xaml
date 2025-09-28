@@ -10,14 +10,21 @@
       Title="ModifiersPage">
 
   <Grid>
-    <StackPanel>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <StackPanel Grid.Row="0">
       <TextBlock Text="Modifiers" FontSize="50px" FontFamily="/Assets/SnakeDemo-lgEeD.otf#Snake Demo" HorizontalAlignment="Center"/>
       <TextBlock x:Name="ScoreMultiplierText" FontSize="35px" FontFamily="Arial" HorizontalAlignment="Center" FontWeight="Bold"/>
     </StackPanel>
-    <Button Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Main Menu" Click="MainMenu_Click"/>
-    <Button Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Mod Info" Click="Info_Click"/>
-    <Button Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Save" Click="Save_Click"/>
-    <ListView x:Name="ModifiersListView" Height="600" Margin="10,50,10,50">
+
+    <ListView x:Name="ModifiersListView"
+              Grid.Row="1"
+              Margin="10,10,10,10"
+              ScrollViewer.VerticalScrollBarVisibility="Auto">
       <ListView.GroupStyle>
         <GroupStyle>
           <GroupStyle.HeaderTemplate>
@@ -32,12 +39,16 @@
       </ListView.GroupStyle>
       <ListView.ItemTemplate>
         <DataTemplate>
-          <StackPanel Orientation="Horizontal" Margin="5">
+          <StackPanel Orientation="Horizontal" Margin="5" CanVerticallyScroll="True">
             <CheckBox IsChecked="{Binding IsEnabled}"/>
             <TextBlock Text="{Binding Name}" Margin="5,0,0,0"/>
           </StackPanel>
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
+
+    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Main Menu" Click="MainMenu_Click" Margin="0,0,0,10"/>
+    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Mod Info" Click="Info_Click" Margin="10,0,0,10"/>
+    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Save" Click="Save_Click" Margin="0,0,10,10"/>
   </Grid>
 </Page>

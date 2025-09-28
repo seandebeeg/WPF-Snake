@@ -87,7 +87,7 @@ namespace WindowsSnake
                 }
                 totalMultiplier /= 100;
                 existingSettings.Multiplier = totalMultiplier;
-                ScoreMultiplierText.Text = totalMultiplier.ToString();
+                ScoreMultiplierText.Text = totalMultiplier.ToString() + "x";
                 Directory.CreateDirectory(Path.GetDirectoryName(settingsPath));
                 File.WriteAllText(settingsPath, JsonSerializer.Serialize(existingSettings));
 
