@@ -1,6 +1,9 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace WindowsSnake
 {
@@ -36,11 +39,13 @@ namespace WindowsSnake
           {
             this.WindowState = WindowState.Maximized;
             isMaximized = true;
+            MaximizeButton.Content = new Image { Source = new BitmapImage(new Uri("\\Assets\\Snake-Window-Button.png", UriKind.Relative)) };
           }
           else
           {
             this.WindowState = WindowState.Normal;
             isMaximized = false;
+            MaximizeButton.Content = new Image { Source = new BitmapImage(new Uri("\\Assets\\Snake-FullScreen-Button.png", UriKind.Relative)) };
           }
         }
 
