@@ -27,9 +27,9 @@
         <StackPanel Grid.Row="2">
           <TextBlock Text="Controls" FontSize="30"/>
         </StackPanel>
-        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Left" Content="Main Menu" Click="MainMenu_Click"/>
-        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Center" Content="Reset"/>
-        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Right" Content="Save"/>
+        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Left" Content="Main Menu" Click="MainMenu_Click" Style="{StaticResource WindowButtonTriggers}"/>
+        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Center" Content="Reset" Style="{StaticResource WindowButtonTriggers}"/>
+        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Right" Content="Save" Style="{StaticResource WindowButtonTriggers}"/>
       </Grid>
     </StackPanel>
   </Grid>

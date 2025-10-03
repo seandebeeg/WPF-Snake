@@ -23,28 +23,28 @@
           <ColumnDefinition Width="*"/>
           <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button FontFamily="Snake Demo" Click="Button_Click" FontSize="16" Content="Start" BorderThickness="5,5,5,5" BorderBrush="#FF5BD142" Grid.Column="0">
+      <Button FontFamily="Snake Demo" Click="Button_Click" FontSize="16" Content="Start" BorderThickness="5,5,5,5" BorderBrush="#FF5BD142" Grid.Column="0" Style="{StaticResource WindowButtonTriggers}">
           <Button.Width>76</Button.Width>
           <Button.Height>38px</Button.Height>
           <Button.Foreground>White</Button.Foreground>
           <Button.Background>Green</Button.Background>
         </Button>
-        <Button FontFamily="Snake Demo" Click="Button_Click" FontSize="16" Content="Colors" BorderThickness="5,5,5,5" BorderBrush="#FF00F5FF" Background="#FF34A1EB" Grid.Column="1">
+      <Button FontFamily="Snake Demo" Click="Button_Click" FontSize="16" Content="Colors" BorderThickness="5,5,5,5" BorderBrush="#FF00F5FF" Background="#FF34A1EB" Grid.Column="1" Style="{StaticResource WindowButtonTriggers}">
           <Button.Width>75</Button.Width>
           <Button.Height>38px</Button.Height>
           <Button.Foreground>White</Button.Foreground>
         </Button>
-        <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Settings" BorderThickness="5,5,5,5" BorderBrush="#FFC5D1D9" Background="#FF728998" Grid.Column="2">
+      <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Settings" BorderThickness="5,5,5,5" BorderBrush="#FFC5D1D9" Background="#FF728998" Grid.Column="2" Style="{StaticResource WindowButtonTriggers}">
           <Button.Width>75</Button.Width>
           <Button.Height>38px</Button.Height>
           <Button.Foreground>White</Button.Foreground>
         </Button>
-        <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Modifiers" BorderThickness="5,5,5,5" BorderBrush="#FFE33D3D" Background="red" Grid.Column="3">
+      <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Modifiers" BorderThickness="5,5,5,5" BorderBrush="#FFE33D3D" Background="red" Grid.Column="3" Style="{StaticResource WindowButtonTriggers}">
           <Button.Width>80</Button.Width>
           <Button.Height>38px</Button.Height>
           <Button.Foreground>White</Button.Foreground>
         </Button>
-        <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Scores" BorderThickness="5,5,5,5" BorderBrush="#FFEFEF72" Background="yellow" Grid.Column="4">
+      <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Scores" BorderThickness="5,5,5,5" BorderBrush="#FFEFEF72" Background="yellow" Grid.Column="4" Style="{StaticResource WindowButtonTriggers}">
           <Button.Width>80px</Button.Width>
           <Button.Height>38px</Button.Height>
           <Button.Foreground>White</Button.Foreground>

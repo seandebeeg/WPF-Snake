@@ -47,8 +47,8 @@
       </ListView.ItemTemplate>
     </ListView>
 
-    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Main Menu" Click="MainMenu_Click" Margin="0,0,0,10"/>
-    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Mod Info" Click="Info_Click" Margin="10,0,0,10"/>
-    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Save" Click="Save_Click" Margin="0,0,10,10"/>
+    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Center" Content="Main Menu" Click="MainMenu_Click" Margin="0,0,0,10" Style="{StaticResource WindowButtonTriggers}"/>
+    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Left" Content="Mod Info" Click="Info_Click" Margin="10,0,0,10" Style="{StaticResource WindowButtonTriggers}"/>
+    <Button Grid.Row="2" Height="38" Width="100" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Save" Click="Save_Click" Margin="0,0,10,10" Style="{StaticResource WindowButtonTriggers}"/>
   </Grid>
 </Page>

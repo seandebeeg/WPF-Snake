@@ -6,9 +6,6 @@ using System.Windows.Media.Imaging;
 
 namespace WindowsSnake
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private bool isMaximized = false;
