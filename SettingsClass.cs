@@ -24,4 +24,10 @@
     public int ScoreNumber { get; set; }
     public required string TimeObtained { get; set; }
   }
+
+  public class SettingItem
+  {
+    public bool IsEnabled { get; set; }
+
+  }
 }

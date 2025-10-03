@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Text.Json;
+using System.IO;
 
 namespace WindowsSnake
 {
@@ -14,6 +16,25 @@ namespace WindowsSnake
       _parentWindow = parentWindow;
       _parentWindow.Title = "Settings";
       InitializeComponent();
+      LoadSettings();
+    }
+
+    private void LoadSettings()
+    {
+      var settingsPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "Snake",
+        "settings.json"
+      );
+      if (!File.Exists(settingsPath))
+      {
+        Directory.CreateDirectory(settingsPath);
+      }
+      else
+      {
+        var currentSettings = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
+      }
+
     }
 
     private void MainMenu_Click(object sender, RoutedEventArgs e)
