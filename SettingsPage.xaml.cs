@@ -39,22 +39,64 @@ namespace WindowsSnake
       LoadSettings();
     }
 
-    private static void LoadSettings()
+    private void LoadSettings()
     {
-      var settingsPath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-        "Snake",
-        "settings.json"
-      );
-      if (!File.Exists(settingsPath))
+      try
       {
-        Directory.CreateDirectory(settingsPath);
-      }
-      else
-      {
-        var currentSettings = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
-      }
+        var settingsPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+            "Snake",
+            "settings.json"
+        );
 
+        if (File.Exists(settingsPath))
+        {
+          var loadedSettings = JsonSerializer.Deserialize<GameSettings>(
+              File.ReadAllText(settingsPath));
+
+          if (loadedSettings?.Modifiers != null)
+          {
+            foreach (var setting in _settings)
+            {
+              var savedSettings = loadedSettings.Settings
+                  .FirstOrDefault(m => m.Name == setting.Name);
+              if (savedSettings != null)
+              {
+                setting.IsEnabled = savedSettings.IsEnabled;
+              }
+            }
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show($"Error loading settings: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+      }
+    }
+
+    private void Save_Click(object sender, RoutedEventArgs e)
+    {
+      try
+      {
+        var settingsPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+            "Snake",
+            "settings.json"
+        );
+
+        GameSettings existingSettings = File.Exists(settingsPath)
+            ? JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath))
+            : new GameSettings();
+
+        existingSettings.Settings = _settings.Where(m => m.IsEnabled).ToList();
+        Directory.CreateDirectory(Path.GetDirectoryName(settingsPath));
+        File.WriteAllText(settingsPath, JsonSerializer.Serialize(existingSettings));
+
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show($"Error saving settings: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+      }
     }
 
     private void MainMenu_Click(object sender, RoutedEventArgs e)
