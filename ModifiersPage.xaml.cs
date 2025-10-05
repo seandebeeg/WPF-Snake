@@ -20,8 +20,7 @@ namespace WindowsSnake
             
             _settings = new GameSettings
             {
-                Modifiers = new List<ModifierItem>(),
-                SelectedSettings = new Dictionary<string, string>()
+                Modifiers = new List<ModifierItem>()
             };
 
             _modifiers = new ObservableCollection<ModifierItem>

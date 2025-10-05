@@ -42,7 +42,7 @@ namespace WindowsSnake
               CurrentColor = "#FF0000FF",
               Modifiers = null,
               Multiplier = 1,
-              SelectedSettings = null
+              Settings = null
             };
             File.WriteAllText(settingsPath, JsonSerializer.Serialize(defaultSettings));
             return defaultSettings;

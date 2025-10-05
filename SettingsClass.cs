@@ -5,8 +5,8 @@
     public int HighScore { get; set; }
     public List<Score>? ScoreEntries { get; set; }
     public List<ModifierItem>? Modifiers { get; set; }
+    public List<SettingsItem>? Settings { get; set; }
     public string? CurrentColor { get; set; }
-    public Dictionary<string, string>? SelectedSettings { get; set; }
     public double Multiplier { get; set; }
   }
 
@@ -25,9 +25,10 @@
     public required string TimeObtained { get; set; }
   }
 
-  public class SettingItem
+  public class SettingsItem
   {
     public bool IsEnabled { get; set; }
     public required string Name { get; set; }
+    public required string Type { get; set; }
   }
 }
