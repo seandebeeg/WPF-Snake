@@ -28,6 +28,6 @@
   public class SettingItem
   {
     public bool IsEnabled { get; set; }
-
+    public required string Name { get; set; }
   }
 }

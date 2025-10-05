@@ -24,28 +24,28 @@
           <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
       <xctk:ColorPicker SelectedColor="Blue" Grid.Column="1" Grid.Row="1" x:Name="ColorSelector" Height="24"/>
-      <Button Click="MainMenu_Click" Style="{StaticResource WindowButtonTriggers}">
+      <Button Click="MainMenu_Click" Style="{StaticResource WindowButtonTriggers}" Background="#FFEB3A3A" Foreground="White" FontWeight="Bold">
         <Grid.Row>2</Grid.Row>
         <Grid.Column>1</Grid.Column>
         <Button.Content>Main Menu</Button.Content>
         <Button.Height>38</Button.Height>
         <Button.Width>115</Button.Width>
       </Button>
-      <Button Click="Previous_Click" Style="{StaticResource WindowButtonTriggers}">
+      <Button Click="Previous_Click" Style="{StaticResource WindowButtonTriggers}" Background="Yellow" Foreground="White" FontWeight="Bold">
         <Grid.Row>1</Grid.Row>
         <Grid.Column>0</Grid.Column>
         <Button.Content>Previous</Button.Content>
         <Button.Height>38</Button.Height>
         <Button.Width>115</Button.Width>
       </Button>
-      <Button Click="Next_Click" Style="{StaticResource WindowButtonTriggers}">
+      <Button Click="Next_Click" Style="{StaticResource WindowButtonTriggers}" Background="DeepSkyBlue" Foreground="White" FontWeight="Bold">
         <Grid.Row>1</Grid.Row>
         <Grid.Column>2</Grid.Column>
         <Button.Content>Next</Button.Content>
         <Button.Height>38</Button.Height>
         <Button.Width>115</Button.Width>
       </Button>
-      <Button Click="Save_Click" Style="{StaticResource WindowButtonTriggers}">
+      <Button Click="Save_Click" Style="{StaticResource WindowButtonTriggers}" Background="LightGreen" Foreground="White" FontWeight="Bold">
         <Grid.Row>0</Grid.Row>
         <Grid.Column>1</Grid.Column>
         <Button.Content>Save</Button.Content>

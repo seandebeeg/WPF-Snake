@@ -36,6 +36,6 @@
       <TextBlock Text="Speed Boost Every Point (+0.9x)" Margin="20,5,0,0"/>
       <TextBlock Text="D.U.I (+1.0x) randomly turn every 3-4 seconds" Margin="20,5,0,0"/>
     </StackPanel>
-    <Button Grid.Row="2" Height="38px" Width="100px" Content="Back to Modifiers" Click="Modifiers_Click" Style="{StaticResource WindowButtonTriggers}"/>
+    <Button Grid.Row="2" Height="38px" Width="100px" Content="Back to Modifiers" Click="Modifiers_Click" Style="{StaticResource WindowButtonTriggers}" Background="#FFEB3A3A" Foreground="White" FontWeight="Bold"/>
   </Grid>
 </Page>

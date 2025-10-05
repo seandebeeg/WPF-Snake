@@ -7,29 +7,13 @@
       mc:Ignorable="d" 
       d:DesignHeight="732" d:DesignWidth="700"
       Title="SettingsPage">
-
   <Grid>
     <StackPanel x:Name="SettingsPanel">
       <TextBlock Text="Settings" FontSize="50" HorizontalAlignment="Center" FontFamily="/Assets/SnakeDemo-lgEeD.otf#Snake Demo"/>
       <Grid Height="682px">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
-          <TextBlock Text="Game" FontSize="30"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1">
-          <TextBlock Text="Preferences" FontSize="30"/>
-        </StackPanel>
-        <StackPanel Grid.Row="2">
-          <TextBlock Text="Controls" FontSize="30"/>
-        </StackPanel>
-        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Left" Content="Main Menu" Click="MainMenu_Click" Style="{StaticResource WindowButtonTriggers}"/>
-        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Center" Content="Reset" Style="{StaticResource WindowButtonTriggers}"/>
-        <Button Grid.Row="3" Height="38px" Width="100px" HorizontalAlignment="Right" Content="Save" Style="{StaticResource WindowButtonTriggers}"/>
+        <Button Height="38px" Width="100px" HorizontalAlignment="Left" Content="Main Menu" Click="MainMenu_Click" Style="{StaticResource WindowButtonTriggers}" Background="#FFEB3A3A" Foreground="White" FontWeight="Bold"/>
+        <Button Height="38px" Width="100px" HorizontalAlignment="Center" Content="Reset" Style="{StaticResource WindowButtonTriggers}" Background="Orange" Foreground="White" FontWeight="Bold"/>
+        <Button Height="38px" Width="100px" HorizontalAlignment="Right" Content="Save" Style="{StaticResource WindowButtonTriggers}" Background="LightGreen" Foreground="White" FontWeight="Bold"/>
       </Grid>
     </StackPanel>
   </Grid>
