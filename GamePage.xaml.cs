@@ -1,9 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Text.Json;
 using System.IO;
-using System.Windows;
 using System.Windows.Media;
-using System.Diagnostics;
 
 namespace WindowsSnake
 {

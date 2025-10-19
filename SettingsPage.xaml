@@ -14,17 +14,17 @@
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     <ListView x:Name="SettingsListView"
-           Grid.Row="1"
-           Margin="10,10,10,10"
-           ScrollViewer.VerticalScrollBarVisibility="Auto">
+      Grid.Row="1"
+      Margin="10,10,10,10"
+      ScrollViewer.VerticalScrollBarVisibility="Auto">
       <ListView.GroupStyle>
         <GroupStyle>
           <GroupStyle.HeaderTemplate>
             <DataTemplate>
               <TextBlock Text="{Binding Name}" 
-                      FontWeight="Bold" 
-                      FontSize="20" 
-                      Margin="5"/>
+                FontWeight="Bold" 
+                FontSize="20" 
+                Margin="5"/>
             </DataTemplate>
           </GroupStyle.HeaderTemplate>
         </GroupStyle>

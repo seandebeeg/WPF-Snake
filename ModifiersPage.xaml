@@ -21,18 +21,21 @@
       <TextBlock x:Name="ScoreMultiplierText" FontSize="35px" FontFamily="Arial" HorizontalAlignment="Center" FontWeight="Bold"/>
     </StackPanel>
 
-    <ListView x:Name="ModifiersListView"
-              Grid.Row="1"
-              Margin="10,10,10,10"
-              ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <ListView 
+      x:Name="ModifiersListView"
+      Grid.Row="1"
+      Margin="10,10,10,10"
+      ScrollViewer.VerticalScrollBarVisibility="Auto">
       <ListView.GroupStyle>
         <GroupStyle>
           <GroupStyle.HeaderTemplate>
             <DataTemplate>
-              <TextBlock Text="{Binding Name}" 
-                         FontWeight="Bold" 
-                         FontSize="20" 
-                         Margin="5"/>
+              <TextBlock 
+                Text="{Binding Name}" 
+                FontWeight="Bold" 
+                FontSize="20" 
+                Margin="5"
+              />
             </DataTemplate>
           </GroupStyle.HeaderTemplate>
         </GroupStyle>

@@ -79,14 +79,14 @@ namespace WindowsSnake
       try
       {
         var settingsPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-            "Snake",
-            "settings.json"
+          Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+          "Snake",
+          "settings.json"
         );
 
         GameSettings existingSettings = File.Exists(settingsPath)
-            ? JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath))
-            : new GameSettings();
+          ? JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath))
+          : new GameSettings();
 
         existingSettings.Settings = _settings.Where(m => m.IsEnabled).ToList();
         Directory.CreateDirectory(Path.GetDirectoryName(settingsPath));

@@ -4,7 +4,6 @@ using System.Windows.Media;
 using System.Text.Json;
 using System.IO;
 
-
 namespace WindowsSnake
 {
   public partial class ColorsPage : Page
@@ -95,8 +94,5 @@ namespace WindowsSnake
       var json = JsonSerializer.Serialize(_settings);
       File.WriteAllText(configPath, json);
     }
-
-    
-
   }
 }

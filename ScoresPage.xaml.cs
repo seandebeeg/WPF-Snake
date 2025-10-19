@@ -24,22 +24,22 @@ namespace WindowsSnake
       try
       {
         var settingsPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-            "Snake", 
-            "settings.json"
+          Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+          "Snake", 
+          "settings.json"
         );
         
         if (File.Exists(settingsPath))
         {
-            GameSettings currentScores = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
-            if (currentScores?.ScoreEntries != null)
-            {
-                ScoresListView.ItemsSource = currentScores.ScoreEntries;
-            }
-            else
-            {
-                ScoresListView.ItemsSource = new List<Score>();
-            }
+          GameSettings currentScores = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
+          if (currentScores?.ScoreEntries != null)
+          {
+            ScoresListView.ItemsSource = currentScores.ScoreEntries;
+          }
+          else
+          {
+            ScoresListView.ItemsSource = new List<Score>();
+          }
         }
       }
       catch (Exception ex)
@@ -55,9 +55,9 @@ namespace WindowsSnake
     private void DeleteAll_Click(object sender, RoutedEventArgs e)
     {
       var settingsPath = Path.Combine(
-           Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-           "Snake",
-           "settings.json"
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "Snake",
+        "settings.json"
       );
       GameSettings currentScores = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
 

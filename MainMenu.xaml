@@ -8,47 +8,47 @@
       d:DesignHeight="732" d:DesignWidth="700"
       Title="Main Menu"
       ShowsNavigationUI="False">
+  <Grid>
+    <TextBlock>
+      <TextBlock.Text>Windows Snake</TextBlock.Text>
+      <TextBlock.FontFamily>pack://application:,,,/WindowsSnake;component/Assets/#Snake Demo</TextBlock.FontFamily>
+      <TextBlock.FontSize>50</TextBlock.FontSize>
+      <TextBlock.HorizontalAlignment>Center</TextBlock.HorizontalAlignment>
+    </TextBlock>
     <Grid>
-      <TextBlock>
-        <TextBlock.Text>Windows Snake</TextBlock.Text>
-        <TextBlock.FontFamily>pack://application:,,,/WindowsSnake;component/Assets/#Snake Demo</TextBlock.FontFamily>
-        <TextBlock.FontSize>50</TextBlock.FontSize>
-        <TextBlock.HorizontalAlignment>Center</TextBlock.HorizontalAlignment>
-      </TextBlock>
-      <Grid>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
       <Button FontFamily="Snake Demo" Click="Button_Click" FontSize="16" Content="Start" BorderThickness="5,5,5,5" BorderBrush="#FF5BD142" Grid.Column="0" Style="{StaticResource WindowButtonTriggers}">
-          <Button.Width>76</Button.Width>
-          <Button.Height>38px</Button.Height>
-          <Button.Foreground>White</Button.Foreground>
-          <Button.Background>Green</Button.Background>
-        </Button>
+        <Button.Width>76</Button.Width>
+        <Button.Height>38px</Button.Height>
+        <Button.Foreground>White</Button.Foreground>
+        <Button.Background>Green</Button.Background>
+      </Button>
       <Button FontFamily="Snake Demo" Click="Button_Click" FontSize="16" Content="Colors" BorderThickness="5,5,5,5" BorderBrush="#FF00F5FF" Background="#FF34A1EB" Grid.Column="1" Style="{StaticResource WindowButtonTriggers}">
-          <Button.Width>75</Button.Width>
-          <Button.Height>38px</Button.Height>
-          <Button.Foreground>White</Button.Foreground>
-        </Button>
+        <Button.Width>75</Button.Width>
+        <Button.Height>38px</Button.Height>
+        <Button.Foreground>White</Button.Foreground>
+      </Button>
       <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Settings" BorderThickness="5,5,5,5" BorderBrush="#FFC5D1D9" Background="#FF728998" Grid.Column="2" Style="{StaticResource WindowButtonTriggers}">
-          <Button.Width>75</Button.Width>
-          <Button.Height>38px</Button.Height>
-          <Button.Foreground>White</Button.Foreground>
-        </Button>
+        <Button.Width>75</Button.Width>
+        <Button.Height>38px</Button.Height>
+        <Button.Foreground>White</Button.Foreground>
+      </Button>
       <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Modifiers" BorderThickness="5,5,5,5" BorderBrush="#FFE33D3D" Background="red" Grid.Column="3" Style="{StaticResource WindowButtonTriggers}">
-          <Button.Width>80</Button.Width>
-          <Button.Height>38px</Button.Height>
-          <Button.Foreground>White</Button.Foreground>
-        </Button>
+        <Button.Width>80</Button.Width>
+        <Button.Height>38px</Button.Height>
+        <Button.Foreground>White</Button.Foreground>
+      </Button>
       <Button FontFamily="Snake Demo" FontSize="16" Click="Button_Click" Content="Scores" BorderThickness="5,5,5,5" BorderBrush="#FFEFEF72" Background="yellow" Grid.Column="4" Style="{StaticResource WindowButtonTriggers}">
-          <Button.Width>80px</Button.Width>
-          <Button.Height>38px</Button.Height>
-          <Button.Foreground>White</Button.Foreground>
-        </Button>
-      </Grid>
+        <Button.Width>80px</Button.Width>
+        <Button.Height>38px</Button.Height>
+        <Button.Foreground>White</Button.Foreground>
+      </Button>
     </Grid>
+  </Grid>
 </Page>
