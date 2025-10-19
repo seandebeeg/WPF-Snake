@@ -2,6 +2,8 @@
 using System.Text.Json;
 using System.IO;
 using System.Windows;
+using System.Windows.Media;
+using System.Diagnostics;
 
 namespace WindowsSnake
 {
@@ -11,11 +13,26 @@ namespace WindowsSnake
   public partial class GamePage : Page
   {
     private MainWindow _parentWindow;
+    private PlayerClass _player;
+    private static double cellSize;
     public GamePage(MainWindow parentWindow)
     {
       _parentWindow = parentWindow;
       _parentWindow.Title = "Game";
       InitializeComponent();
+      PlayerClass player = new()
+      {
+        Direction = 90,
+        X = 0,
+        Y = 0,
+        Head = new()
+        {
+          Width = cellSize,
+          Height = cellSize,
+          Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
+        }
+      };
+      _player = player;
       RunPreGameFunctions();
     }
 
@@ -49,12 +66,25 @@ namespace WindowsSnake
       }
     }
 
-    private readonly GameSettings currentSettings = LoadSettings();
+    private readonly static GameSettings currentSettings = LoadSettings();
+    
 
+    private void LoadStart()
+    {
+      int startY = (BoardArray.GetLength(0) / 2) - 4;
+      int startX = BoardArray.GetLength(1) / 2;
+      _player.X = startX;
+      _player.Y = startY;
+      Grid.SetRow(_player.Head, _player.X);
+      Grid.SetColumn(_player.Head, _player.Y);
+      GameGrid.Children.Add(_player.Head);
+      BoardArray[_player.X, _player.Y] = 1;
+    }
     private void RunPreGameFunctions()
     {
       MakeBoard();
       DetermineSpeed();
+      LoadStart();
     }
   }
 }

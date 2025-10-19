@@ -50,15 +50,17 @@ namespace WindowsSnake
         }
         GameGrid.RowDefinitions.Clear();
         GameGrid.ColumnDefinitions.Clear();
-
+        cellSize = _parentWindow.ActualWidth / RowNumber;
+        _player.Head.Height = cellSize;
+        _player.Head.Width = cellSize;
         for (int i = 0; i < RowNumber; i++)
         {
-          GameGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+          GameGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(cellSize) });
         }
 
         for (int j = 0; j < ColumnNumber; j++)
         {
-          GameGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+          GameGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(cellSize) });
         }
 
         BoardArray = new int[RowNumber, ColumnNumber];
