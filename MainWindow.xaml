@@ -24,17 +24,17 @@
       </Grid.ColumnDefinitions>
       <Border Grid.Column="0" Background="Transparent" MouseDown="Drag_Window"/>
       <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
-        <Button Click="Minimize_Click" Height="30px" Width="30px" Margin="0,0,15,0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource WindowButtonTriggers}">
+        <Button Click="Minimize_Click" Height="30px" Width="30px" Margin="0,7,15,0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource WindowButtonTriggers}">
           <Button.Content>
             <Image Source="/Assets/Snake-Minimize-Button.png"/>
           </Button.Content>
         </Button>
-        <Button Click="Maximize_Click" x:Name="MaximizeButton" Height="30px" Width="30px" Margin="0,0,15,0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource WindowButtonTriggers}">
+        <Button Click="Maximize_Click" x:Name="MaximizeButton" Height="30px" Width="30px" Margin="0,7,15,0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource WindowButtonTriggers}">
           <Button.Content>
             <Image Source="/Assets/Snake-FullScreen-Button.png"/>
           </Button.Content>
         </Button>
-        <Button Click="Close_Click" Height="30px" Width="30px" Margin="0,0,5,0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource WindowButtonTriggers}">
+        <Button Click="Close_Click" Height="30px" Width="30px" Margin="0,7,5,0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource WindowButtonTriggers}">
           <Button.Content>
             <Image Source="/Assets/Snake-Close-Button.png"/>
           </Button.Content>
