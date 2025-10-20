@@ -65,6 +65,7 @@ namespace WindowsSnake
 
         BoardArray = new int[RowNumber, ColumnNumber];
       }
+      _parentWindow.ResizeMode = ResizeMode.NoResize;
     }
 
     private void DetermineSpeed()

@@ -10,6 +10,7 @@ namespace WindowsSnake
     {
       _parentWindow = parentWindow;
       _parentWindow.Title = "Main Menu";
+      _parentWindow.ResizeMode = ResizeMode.CanResize;
       InitializeComponent();
     }
 
