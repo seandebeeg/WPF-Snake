@@ -1,6 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.IO;
 using System.Text.Json;
-using System.IO;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace WindowsSnake
@@ -69,14 +69,35 @@ namespace WindowsSnake
 
     private void LoadStart()
     {
-      int startY = (BoardArray.GetLength(0) / 2) - 4;
-      int startX = BoardArray.GetLength(1) / 2;
+      int startX = (BoardArray.GetLength(0) / 2) - 4;
+      int startY = (BoardArray.GetLength(1) / 2);
       _player.X = startX;
       _player.Y = startY;
-      Grid.SetRow(_player.Head, _player.X);
-      Grid.SetColumn(_player.Head, _player.Y);
+
+      Grid.SetColumn(_player.Head, _player.X);
+      Grid.SetRow(_player.Head, _player.Y);
       GameGrid.Children.Add(_player.Head);
       BoardArray[_player.X, _player.Y] = 1;
+
+      var segment1 = new System.Windows.Shapes.Rectangle
+      {
+        Height = cellSize,
+        Width = cellSize,
+        Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
+      };
+      Grid.SetColumn(segment1, _player.X - 1);
+      Grid.SetRow(segment1, _player.Y);
+      GameGrid.Children.Add(segment1);
+
+      var segment2 = new System.Windows.Shapes.Rectangle
+      {
+        Height = cellSize,
+        Width = cellSize,
+        Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
+      };
+      Grid.SetColumn(segment2, _player.X - 2);
+      Grid.SetRow(segment2, _player.Y);
+      GameGrid.Children.Add(segment2);
     }
     private void RunPreGameFunctions()
     {
