@@ -1,18 +1,20 @@
 ﻿using System.IO;
 using System.Text.Json;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace WindowsSnake
 {
-    /// <summary>
-    /// Interaction logic for GamePage.xaml
-    /// </summary>
+  /// <summary>
+  /// Interaction logic for GamePage.xaml
+  /// </summary>
   public partial class GamePage : Page
   {
     private MainWindow _parentWindow;
     private PlayerClass _player;
-    private static double cellSize;
+    private double cellSize;
     public GamePage(MainWindow parentWindow)
     {
       _parentWindow = parentWindow;
@@ -28,7 +30,8 @@ namespace WindowsSnake
           Width = cellSize,
           Height = cellSize,
           Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
-        }
+        },
+        Body = new()
       };
       _player = player;
       RunPreGameFunctions();
@@ -52,8 +55,8 @@ namespace WindowsSnake
       }
       else
       {
-        GameSettings defaultSettings = new GameSettings 
-        { 
+        GameSettings defaultSettings = new GameSettings
+        {
           CurrentColor = "#FF0000FF",
           Modifiers = null,
           Multiplier = 1,
@@ -65,7 +68,7 @@ namespace WindowsSnake
     }
 
     private readonly static GameSettings currentSettings = LoadSettings();
-    
+
 
     private void LoadStart()
     {
@@ -85,9 +88,11 @@ namespace WindowsSnake
         Width = cellSize,
         Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
       };
+
       Grid.SetColumn(segment1, _player.X - 1);
       Grid.SetRow(segment1, _player.Y);
-      GameGrid.Children.Add(segment1);
+      _player.Body.Add(segment1);
+      GameGrid.Children.Add(_player.Body[0]);
 
       var segment2 = new System.Windows.Shapes.Rectangle
       {
@@ -95,10 +100,24 @@ namespace WindowsSnake
         Width = cellSize,
         Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
       };
+
       Grid.SetColumn(segment2, _player.X - 2);
       Grid.SetRow(segment2, _player.Y);
-      GameGrid.Children.Add(segment2);
+      _player.Body.Add(segment2);
+      GameGrid.Children.Add(_player.Body[1]);
+
+      var apple = new Image
+      {
+        Width = cellSize,
+        Height = cellSize,
+        Source = new BitmapImage(new Uri("\\Assets\\Apple.png", UriKind.Relative))
+      };
+
+      Grid.SetColumn(apple, _player.X + 7);
+      Grid.SetRow(apple, _player.Y);
+      GameGrid.Children.Add(apple);
     }
+
     private void RunPreGameFunctions()
     {
       MakeBoard();
@@ -107,3 +126,4 @@ namespace WindowsSnake
     }
   }
 }
+

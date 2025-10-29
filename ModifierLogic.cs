@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace WindowsSnake
@@ -27,16 +22,16 @@ namespace WindowsSnake
             {
               default:
                 BoardMultiplier = 1.00;
-                break;
+              break;
               case "Bigger Board":
                 BoardMultiplier = 1.75;
-                break;
+              break;
               case "Small Board":
                 BoardMultiplier = 0.5;
-                break;
+              break;
               case "Tiny Board":
                 BoardMultiplier = 0.25;
-                break;
+              break;
             }
             RowNumber = ((int)(DefaultRows * BoardMultiplier));
             ColumnNumber = ((int)(DefaultColumns * BoardMultiplier));
