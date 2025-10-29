@@ -15,6 +15,7 @@
 	  <None Remove="Assets\Snake-FullScreen-Button.png" />
 	  <None Remove="Assets\Snake-Minimize-Button.png" />
 	  <None Remove="Assets\Snake-Window-Button.png" />
+		<None Remove="Assets\Apple.png" />
 	  <None Remove="Assets\SnakeDemo-lgEeD.otf" />
 	</ItemGroup>
 	<ItemGroup>
@@ -31,5 +32,6 @@
 	  <Resource Include="Assets\Snake-FullScreen-Button.png" />
 	  <Resource Include="Assets\Snake-Minimize-Button.png" />
 	  <Resource Include="Assets\Snake-Window-Button.png" />
+		<Resource Include="Assets\Apple.png" />
 	</ItemGroup>
 </Project>
