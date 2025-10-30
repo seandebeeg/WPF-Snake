@@ -12,6 +12,9 @@ namespace WindowsSnake
       double BoardMultiplier = 1.00;
       int RowNumber = DefaultRows;
       int ColumnNumber = DefaultColumns;
+
+      _parentWindow.Width = _parentWindow.Height - 40; //account for title bar height
+
       if (currentSettings.Modifiers != null)
       {
         foreach (ModifierItem Modifier in currentSettings.Modifiers)
@@ -45,9 +48,12 @@ namespace WindowsSnake
         }
         GameGrid.RowDefinitions.Clear();
         GameGrid.ColumnDefinitions.Clear();
-        cellSize = _parentWindow.ActualWidth / RowNumber;
+
+        cellSize = ((int)(_parentWindow.ActualWidth / RowNumber));
+
         _player.Head.Height = cellSize;
         _player.Head.Width = cellSize;
+
         for (int i = 0; i < RowNumber; i++)
         {
           GameGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(cellSize) });
@@ -61,6 +67,9 @@ namespace WindowsSnake
         BoardArray = new int[RowNumber, ColumnNumber];
       }
       _parentWindow.ResizeMode = ResizeMode.NoResize;
+
+      GameBorder.Height = RowNumber * cellSize;
+      GameBorder.Width = ColumnNumber * cellSize;
     }
 
     private void DetermineSpeed()
