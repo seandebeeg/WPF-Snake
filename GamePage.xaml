@@ -6,9 +6,12 @@
       xmlns:local="clr-namespace:WindowsSnake"
       mc:Ignorable="d" 
       d:DesignHeight="732" d:DesignWidth="700"
-      Title="GamePage">
-  <Border BorderBrush="Black" BorderThickness="10">
-    <Grid x:Name="GameGrid">
+      Title="GamePage"
+      KeyDown="ProcessKeyStrokes"
+      Focusable="True"
+      FocusVisualStyle="{x:Null}">
+  <Border BorderBrush="Black" BorderThickness="10" Focusable="False">
+    <Grid x:Name="GameGrid" Focusable="False">
     
     </Grid>
   </Border>

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Text.Json;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,7 +20,9 @@ namespace WindowsSnake
     {
       _parentWindow = parentWindow;
       _parentWindow.Title = "Game";
+      _parentWindow.MainNavigation.Focus();
       InitializeComponent();
+      this.Loaded += (s, e) => this.Focus();
       PlayerClass player = new()
       {
         Direction = 90,
@@ -93,6 +96,7 @@ namespace WindowsSnake
       Grid.SetRow(segment1, _player.Y);
       _player.Body.Add(segment1);
       GameGrid.Children.Add(_player.Body[0]);
+      BoardArray[Grid.GetColumn(_player.Body[0]), Grid.GetRow(_player.Body[0])] = 1;
 
       var segment2 = new System.Windows.Shapes.Rectangle
       {
@@ -105,6 +109,7 @@ namespace WindowsSnake
       Grid.SetRow(segment2, _player.Y);
       _player.Body.Add(segment2);
       GameGrid.Children.Add(_player.Body[1]);
+      BoardArray[Grid.GetColumn(_player.Body[1]), Grid.GetRow(_player.Body[1])] = 1;
 
       var apple = new Image
       {
@@ -116,6 +121,46 @@ namespace WindowsSnake
       Grid.SetColumn(apple, _player.X + 7);
       Grid.SetRow(apple, _player.Y);
       GameGrid.Children.Add(apple);
+    }
+
+    private void TurnPlayer(string Direction)
+    {
+      switch (Direction)
+      {
+        case "Right":
+          _player.Direction = 90;
+        break;
+        case "Down":
+          _player.Direction = 180;
+        break;
+        case "Left":
+          _player.Direction = 270;
+        break;
+        case "Up":
+          _player.Direction = 0;
+        break;
+      }
+    }
+
+    private void ProcessKeyStrokes(object sender, KeyEventArgs e)
+    {
+      var PressedKey = e.Key;
+      if (PressedKey == Key.Right && _player.Direction != 270)
+      {
+        TurnPlayer("Right");
+      }
+      else if (PressedKey == Key.Down && _player.Direction != 0)
+      {
+        TurnPlayer("Down");
+      }
+      else if (PressedKey == Key.Left && _player.Direction != 90)
+      {
+        TurnPlayer("Left");
+      }
+      else if (PressedKey == Key.Up && _player.Direction != 180)
+      {
+        TurnPlayer("Up");
+      }
     }
 
     private void RunPreGameFunctions()
