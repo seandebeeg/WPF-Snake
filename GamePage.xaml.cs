@@ -45,7 +45,11 @@ namespace WindowsSnake
 
       _moveTimer = new();
       _moveTimer.Interval = TimeSpan.FromSeconds(1 / PlayerSpeed);
-      _moveTimer.Tick += (s, e) => MoveBody();
+      _moveTimer.Tick += (s, e) => 
+      {
+        MoveBody();
+        CheckForCollision();
+      };
       _moveTimer.Start();
     }
 
@@ -231,6 +235,43 @@ namespace WindowsSnake
           Grid.SetRow(BodySegment, BodySegmentsY[index - 1]);
         }
         index++;
+      }
+    }
+
+    private void CheckForCollision()
+    {
+      List<int> BodySegmentsX = new();
+      List<int> BodySegmentsY = new();
+      int OccupiedBoardSpaces = 0;
+
+      int HeadX = Grid.GetColumn(_player.Head);
+      int HeadY = Grid.GetRow(_player.Head);
+
+      foreach (var BodySegment in _player.Body)
+      {
+        BodySegmentsX.Add(Grid.GetColumn(BodySegment));
+        BodySegmentsY.Add(Grid.GetRow(BodySegment));
+      }
+
+      foreach(int Space in BoardArray)
+      {
+        if(Space == 1)
+        {
+          OccupiedBoardSpaces++;
+        }
+      }
+
+      if(
+        OccupiedBoardSpaces > _player.Body.Count + 1 
+        && !currentSettings.Modifiers.Contains(new ModifierItem { Name = "Overlap", Multiplier = -0.25, IsEnabled = false, Difficulty = "Easy" }) 
+        && !currentSettings.Modifiers.Contains(new ModifierItem { Name = "Invincibility", Multiplier = -1000, IsEnabled = false, Difficulty = "Easy" })
+      )
+      {
+        _moveTimer.Stop();
+      } 
+      else if (HeadX < 0 || HeadY < 0 || HeadX > GameGrid.ColumnDefinitions.Count || HeadY > GameGrid.RowDefinitions.Count)
+      {
+        _moveTimer.Stop();
       }
     }
 
