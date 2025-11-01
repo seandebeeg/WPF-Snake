@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,9 +7,6 @@ using System.Windows.Media.Imaging;
 
 namespace WindowsSnake
 {
-  /// <summary>
-  /// Interaction logic for GamePage.xaml
-  /// </summary>
   public partial class GamePage : Page
   {
     private MainWindow _parentWindow;
@@ -82,6 +78,7 @@ namespace WindowsSnake
 
       Grid.SetColumn(_player.Head, _player.X);
       Grid.SetRow(_player.Head, _player.Y);
+
       GameGrid.Children.Add(_player.Head);
       BoardArray[_player.X, _player.Y] = 1;
 
@@ -94,6 +91,7 @@ namespace WindowsSnake
 
       Grid.SetColumn(segment1, _player.X - 1);
       Grid.SetRow(segment1, _player.Y);
+
       _player.Body.Add(segment1);
       GameGrid.Children.Add(_player.Body[0]);
       BoardArray[Grid.GetColumn(_player.Body[0]), Grid.GetRow(_player.Body[0])] = 1;
@@ -107,6 +105,7 @@ namespace WindowsSnake
 
       Grid.SetColumn(segment2, _player.X - 2);
       Grid.SetRow(segment2, _player.Y);
+
       _player.Body.Add(segment2);
       GameGrid.Children.Add(_player.Body[1]);
       BoardArray[Grid.GetColumn(_player.Body[1]), Grid.GetRow(_player.Body[1])] = 1;
@@ -163,6 +162,65 @@ namespace WindowsSnake
       }
     }
 
+    private void MoveBody()
+    {
+      List<int> BodySegmentsX = new();
+      List<int> BodySegmentsY = new();
+      
+      int HeadX = Grid.GetColumn(_player.Head);
+      int HeadY = Grid.GetRow(_player.Head);
+      int OldHeadX = HeadX;
+      int OldHeadY = HeadY;
+      int index = 0;
+
+      BoardArray[ HeadX, HeadY ] = 0;
+
+      switch (_player.Direction)
+      {
+        case 0:
+          HeadY--;
+        break;
+        case 90:
+          HeadX++;
+        break;
+        case 180:
+          HeadY++;
+        break;
+        case 270:
+          HeadX--;
+        break;
+      }
+
+      BoardArray[ HeadX, HeadY ] = 1;
+
+      Grid.SetColumn(_player.Head, HeadX);
+      Grid.SetRow(_player.Head, HeadY);
+
+      foreach (var BodySegment in _player.Body)
+      {
+        BodySegmentsX.Add(Grid.GetColumn(BodySegment));
+        BodySegmentsY.Add(Grid.GetRow(BodySegment));
+
+        if (index == 0)
+        {
+          BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
+          BoardArray[OldHeadX, OldHeadY] = 1;
+
+          Grid.SetColumn(BodySegment, OldHeadX);
+          Grid.SetRow(BodySegment, OldHeadY);
+        }
+        else
+        {
+          BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
+          BoardArray[BodySegmentsX[index - 1], BodySegmentsY[index - 1]] = 1;
+
+          Grid.SetColumn(BodySegment, BodySegmentsX[index - 1]);
+          Grid.SetRow(BodySegment, BodySegmentsY[index - 1]);
+        }
+        index++;
+      }
+    }
+
     private void RunPreGameFunctions()
     {
       MakeBoard();
@@ -171,4 +229,3 @@ namespace WindowsSnake
     }
   }
 }
-
