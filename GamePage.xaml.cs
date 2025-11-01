@@ -84,7 +84,7 @@ namespace WindowsSnake
 
     private void LoadStart()
     {
-      int startX = (BoardArray.GetLength(0) / 2) - 4;
+      int startX = (BoardArray.GetLength(0) / 2) - ((int)(4 * (GameGrid.ColumnDefinitions.Count / 20)));
       int startY = (BoardArray.GetLength(1) / 2);
       _player.X = startX;
       _player.Y = startY;
@@ -130,7 +130,7 @@ namespace WindowsSnake
         Source = new BitmapImage(new Uri("\\Assets\\Apple.png", UriKind.Relative))
       };
 
-      Grid.SetColumn(apple, _player.X + 7);
+      Grid.SetColumn(apple, _player.X + ((int)(7 * (GameGrid.ColumnDefinitions.Count / 20))));
       Grid.SetRow(apple, _player.Y);
       GameGrid.Children.Add(apple);
     }

@@ -9,6 +9,7 @@ namespace WindowsSnake
     {
       const int DefaultRows = 20;
       const int DefaultColumns = 20;
+
       double BoardMultiplier = 1.00;
       int RowNumber = DefaultRows;
       int ColumnNumber = DefaultColumns;
