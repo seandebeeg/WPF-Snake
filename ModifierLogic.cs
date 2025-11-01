@@ -76,6 +76,7 @@ namespace WindowsSnake
     {
       double speedMultiplier = 1;
       double defaultSpeed = 3; // 3 columns/rows a second 
+      PlayerSpeed = defaultSpeed;
       if (currentSettings.Modifiers != null)
       {
         foreach (ModifierItem Modifier in currentSettings.Modifiers)

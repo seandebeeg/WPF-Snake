@@ -12,28 +12,41 @@ namespace WindowsSnake
     private MainWindow _parentWindow;
     private PlayerClass _player;
     private double cellSize;
+    private System.Windows.Threading.DispatcherTimer _moveTimer;
     public GamePage(MainWindow parentWindow)
     {
       _parentWindow = parentWindow;
       _parentWindow.Title = "Game";
       _parentWindow.MainNavigation.Focus();
+
       InitializeComponent();
+
       this.Loaded += (s, e) => this.Focus();
+
       PlayerClass player = new()
       {
         Direction = 90,
         X = 0,
         Y = 0,
+
         Head = new()
         {
           Width = cellSize,
           Height = cellSize,
           Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
         },
+
         Body = new()
       };
+
       _player = player;
+
       RunPreGameFunctions();
+
+      _moveTimer = new();
+      _moveTimer.Interval = TimeSpan.FromSeconds(1 / PlayerSpeed);
+      _moveTimer.Tick += (s, e) => MoveBody();
+      _moveTimer.Start();
     }
 
     private int[,] BoardArray;
