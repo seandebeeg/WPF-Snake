@@ -14,8 +14,8 @@ namespace WindowsSnake
       int RowNumber = DefaultRows;
       int ColumnNumber = DefaultColumns;
 
-      _parentWindow.Width = _parentWindow.Height - 40; //account for title bar height
-
+      _parentWindow.Width = _parentWindow.Height;
+      
       if (currentSettings.Modifiers != null)
       {
         foreach (ModifierItem Modifier in currentSettings.Modifiers)
@@ -37,7 +37,7 @@ namespace WindowsSnake
                 BoardMultiplier = 0.25;
               break;
             }
-            RowNumber = ((int)(DefaultRows * BoardMultiplier));
+            RowNumber = ((int)(DefaultRows * BoardMultiplier)); // will make the perimeter the death zone
             ColumnNumber = ((int)(DefaultColumns * BoardMultiplier));
             break;
           }
@@ -50,7 +50,9 @@ namespace WindowsSnake
         GameGrid.RowDefinitions.Clear();
         GameGrid.ColumnDefinitions.Clear();
 
-        cellSize = ((int)(_parentWindow.ActualWidth / RowNumber));
+        double availableWidth = _parentWindow.Width;
+        double availableHeight = _parentWindow.Height - 40; // Account for title bar
+        cellSize = Math.Floor(Math.Min(availableWidth / ColumnNumber, availableHeight / RowNumber));
 
         _player.Head.Height = cellSize;
         _player.Head.Width = cellSize;
@@ -58,19 +60,27 @@ namespace WindowsSnake
         for (int i = 0; i < RowNumber; i++)
         {
           GameGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(cellSize) });
+          var TestText = new TextBlock() { Text = i.ToString() };
+          Grid.SetRow(TestText, i);
+          GameGrid.Children.Add(TestText);
+
         }
 
         for (int j = 0; j < ColumnNumber; j++)
         {
           GameGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(cellSize) });
+          var TestText = new TextBlock() { Text = j.ToString() };
+          Grid.SetColumn(TestText, j);
+          GameGrid.Children.Add(TestText);
+
         }
 
-        BoardArray = new int[RowNumber, ColumnNumber];
+        BoardArray = new int[ColumnNumber, RowNumber];
       }
       _parentWindow.ResizeMode = ResizeMode.NoResize;
 
-      GameBorder.Height = RowNumber * cellSize;
-      GameBorder.Width = ColumnNumber * cellSize;
+      GameBorder.Height = (RowNumber * cellSize) + 10;
+      GameBorder.Width = (ColumnNumber * cellSize) + 10;
     }
 
     private void DetermineSpeed()
