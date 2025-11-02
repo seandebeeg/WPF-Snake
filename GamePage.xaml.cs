@@ -13,6 +13,7 @@ namespace WindowsSnake
     private PlayerClass _player;
     private double cellSize;
     private System.Windows.Threading.DispatcherTimer _moveTimer;
+
     public GamePage(MainWindow parentWindow)
     {
       _parentWindow = parentWindow;
@@ -208,37 +209,57 @@ namespace WindowsSnake
         break;
       }
 
-      BoardArray[ HeadX, HeadY ] = 1;
+      try
+      { 
+        BoardArray[HeadX, HeadY] = 1;
 
-      Grid.SetColumn(_player.Head, HeadX);
-      Grid.SetRow(_player.Head, HeadY);
+        Grid.SetColumn(_player.Head, HeadX);
+        Grid.SetRow(_player.Head, HeadY);
 
-      foreach (var BodySegment in _player.Body)
-      {
-        BodySegmentsX.Add(Grid.GetColumn(BodySegment));
-        BodySegmentsY.Add(Grid.GetRow(BodySegment));
-
-        if (index == 0)
+        foreach (var BodySegment in _player.Body)
         {
-          BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
-          BoardArray[OldHeadX, OldHeadY] = 1;
+          BodySegmentsX.Add(Grid.GetColumn(BodySegment));
+          BodySegmentsY.Add(Grid.GetRow(BodySegment));
 
-          Grid.SetColumn(BodySegment, OldHeadX);
-          Grid.SetRow(BodySegment, OldHeadY);
+          if (index == 0)
+          {
+            BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
+            BoardArray[OldHeadX, OldHeadY] = 1;
+
+            Grid.SetColumn(BodySegment, OldHeadX);
+            Grid.SetRow(BodySegment, OldHeadY);
+          }
+          else
+          {
+            BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
+            BoardArray[BodySegmentsX[index - 1], BodySegmentsY[index - 1]] = 1;
+
+            Grid.SetColumn(BodySegment, BodySegmentsX[index - 1]);
+            Grid.SetRow(BodySegment, BodySegmentsY[index - 1]);
+          }
+          index++;
+        }
+      } 
+      catch(Exception)
+      {
+        if(!currentSettings.Modifiers.Contains(new ModifierItem() 
+          { 
+            Difficulty = "Easy",
+            Name = "Invincibility",
+            IsEnabled = true,
+            Multiplier = -1000
+          }))
+        {
+          _moveTimer.Stop();
         }
         else
         {
-          BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
-          BoardArray[BodySegmentsX[index - 1], BodySegmentsY[index - 1]] = 1;
-
-          Grid.SetColumn(BodySegment, BodySegmentsX[index - 1]);
-          Grid.SetRow(BodySegment, BodySegmentsY[index - 1]);
+          //invincibility logic goes here
         }
-        index++;
       }
     }
 
-    private void CheckForCollision()
+    private void CheckForCollision() //apple logic to be implemented
     {
       List<int> BodySegmentsX = new();
       List<int> BodySegmentsY = new();
@@ -253,7 +274,7 @@ namespace WindowsSnake
         BodySegmentsY.Add(Grid.GetRow(BodySegment));
       }
 
-      foreach(int Space in BoardArray)
+      foreach (int Space in BoardArray)
       {
         if(Space == 1)
         {
@@ -261,15 +282,7 @@ namespace WindowsSnake
         }
       }
 
-      if(
-        OccupiedBoardSpaces > _player.Body.Count + 1 
-        && !currentSettings.Modifiers.Contains(new ModifierItem { Name = "Overlap", Multiplier = -0.25, IsEnabled = false, Difficulty = "Easy" }) 
-        && !currentSettings.Modifiers.Contains(new ModifierItem { Name = "Invincibility", Multiplier = -1000, IsEnabled = false, Difficulty = "Easy" })
-      )
-      {
-        _moveTimer.Stop();
-      } 
-      else if (HeadX < 0 || HeadY < 0 || HeadX > GameGrid.ColumnDefinitions.Count || HeadY > GameGrid.RowDefinitions.Count)
+      if (OccupiedBoardSpaces < _player.Body.Count)
       {
         _moveTimer.Stop();
       }
