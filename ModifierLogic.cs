@@ -37,7 +37,7 @@ namespace WindowsSnake
                 BoardMultiplier = 0.25;
               break;
             }
-            RowNumber = ((int)(DefaultRows * BoardMultiplier)); // will make the perimeter the death zone
+            RowNumber = ((int)(DefaultRows * BoardMultiplier));
             ColumnNumber = ((int)(DefaultColumns * BoardMultiplier));
             break;
           }
@@ -60,19 +60,11 @@ namespace WindowsSnake
         for (int i = 0; i < RowNumber; i++)
         {
           GameGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(cellSize) });
-          var TestText = new TextBlock() { Text = i.ToString() };
-          Grid.SetRow(TestText, i);
-          GameGrid.Children.Add(TestText);
-
         }
 
         for (int j = 0; j < ColumnNumber; j++)
         {
           GameGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(cellSize) });
-          var TestText = new TextBlock() { Text = j.ToString() };
-          Grid.SetColumn(TestText, j);
-          GameGrid.Children.Add(TestText);
-
         }
 
         BoardArray = new int[ColumnNumber, RowNumber];
@@ -88,6 +80,7 @@ namespace WindowsSnake
       double speedMultiplier = 1;
       double defaultSpeed = 3; // 3 columns/rows a second 
       PlayerSpeed = defaultSpeed;
+
       if (currentSettings.Modifiers != null)
       {
         foreach (ModifierItem Modifier in currentSettings.Modifiers)
