@@ -7,7 +7,7 @@
     public List<ModifierItem>? Modifiers { get; set; }
     public List<SettingsItem>? Settings { get; set; }
     public string? CurrentColor { get; set; }
-    public double Multiplier { get; set; }
+    public double ScoreMultiplier { get; set; }
   }
 
   public class ModifierItem

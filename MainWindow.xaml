@@ -22,7 +22,11 @@
         <ColumnDefinition Width="*"/>
         <ColumnDefinition Width="130"/>
       </Grid.ColumnDefinitions>
-      <Border Grid.Column="0" Background="Transparent" MouseDown="Drag_Window" Focusable="False"/>
+      <Border Grid.Column="0" Background="Transparent" MouseDown="Drag_Window" Focusable="False">
+        <StackPanel x:Name="ScorePanel" Orientation="Horizontal">
+          
+        </StackPanel>
+      </Border>
       <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
         <Button Click="Minimize_Click" Height="30px" Width="30px" Margin="0,7,15,0" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource WindowButtonTriggers}" Focusable="False">
           <Button.Content>

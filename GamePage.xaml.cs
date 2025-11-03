@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace WindowsSnake
 {
@@ -13,6 +14,8 @@ namespace WindowsSnake
     private PlayerClass _player;
     private double cellSize;
     private System.Windows.Threading.DispatcherTimer _moveTimer;
+    public double Score;
+    public TextBlock ScoreText;
 
     public GamePage(MainWindow parentWindow)
     {
@@ -77,7 +80,7 @@ namespace WindowsSnake
         {
           CurrentColor = "#FF0000FF",
           Modifiers = null,
-          Multiplier = 1,
+          ScoreMultiplier = 1,
           Settings = null
         };
         File.WriteAllText(settingsPath, JsonSerializer.Serialize(defaultSettings));
@@ -93,6 +96,7 @@ namespace WindowsSnake
     {
       int startX = (BoardArray.GetLength(0) / 2) - ((int)(4 * (GameGrid.ColumnDefinitions.Count / 20)));
       int startY = (BoardArray.GetLength(1) / 2);
+
       _player.X = startX;
       _player.Y = startY;
 
@@ -143,6 +147,27 @@ namespace WindowsSnake
       BoardArray[Grid.GetColumn(Apple), Grid.GetRow(Apple)] += 2;
 
       GameGrid.Children.Add(Apple);
+
+      var DisplayApple = new Image
+      {
+        Width = 40,
+        Height = 40,
+        Source = new BitmapImage(new Uri("\\Assets\\Apple.png", UriKind.Relative)),
+        HorizontalAlignment = HorizontalAlignment.Left,
+        VerticalAlignment = VerticalAlignment.Center
+      };
+
+      _parentWindow.ScorePanel.Children.Add(DisplayApple);
+
+      ScoreText = new TextBlock
+      {
+        Text =": 0",
+        FontSize = 35,
+        HorizontalAlignment = HorizontalAlignment.Left,
+        VerticalAlignment = VerticalAlignment.Center
+      };
+
+      _parentWindow.ScorePanel.Children.Add(ScoreText);
     }
 
     private void TurnPlayer(string Direction)
@@ -268,7 +293,7 @@ namespace WindowsSnake
       }
     }
 
-    private void CheckForCollision() //apple logic to be implemented
+    private void CheckForCollision() //multi, poison, and decoy yet to be implemented
     {
       List<int> BodySegmentsX = new();
       List<int> BodySegmentsY = new();
@@ -307,7 +332,20 @@ namespace WindowsSnake
           }
       }
 
-      if (OccupiedBoardSpaces < _player.Body.Count)
+      if (OccupiedBoardSpaces > _player.Body.Count + 1 
+        && !currentSettings.Modifiers.Contains(new ModifierItem 
+        { 
+          Name = "Overlap",
+          Multiplier = -0.25,
+          IsEnabled = true,
+          Difficulty = "Easy" 
+        }) && !currentSettings.Modifiers.Contains(new ModifierItem
+        {
+          Name = "Invincibility",
+          Multiplier = -1000,
+          IsEnabled = true,
+          Difficulty = "Easy"
+        }))
       {
         _moveTimer.Stop();
         //rest of loser logic goes here
@@ -316,6 +354,10 @@ namespace WindowsSnake
 
     private void ReplaceApple()
     {
+      Score += (currentSettings.ScoreMultiplier * 100) / 100;
+
+      ScoreText.Text = ((float)Score).ToString();
+
       var AppleElement = new Image
       {
         Width = cellSize,
