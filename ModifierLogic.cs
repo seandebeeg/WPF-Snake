@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace WindowsSnake
@@ -111,6 +112,41 @@ namespace WindowsSnake
             PlayerSpeed = defaultSpeed;
           }
         }
+      }
+    }
+
+    private void AddSpeedOnPoint()
+    {
+      const int LowestInterval = 50;
+
+      if (currentSettings.Modifiers.Contains(new ModifierItem 
+        { 
+          Name = "Speed Increase Every 5 Points",
+          Multiplier = 0.45,
+          IsEnabled = true,
+          Difficulty = "Hard" 
+        })
+          && ApplesEaten % 5 == 0 
+          && _moveTimer.Interval > TimeSpan.FromMilliseconds(LowestInterval))
+      {
+        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - 50;
+        _moveTimer.Interval = TimeSpan.FromMilliseconds(NewSpeed);
+        _moveTimer.Stop();
+        _moveTimer.Start();
+      }
+      if (currentSettings.Modifiers.Contains(new ModifierItem //allows the two modifiers to stack
+        {
+          Name = "Speed Increase Every Point",
+          Multiplier = 0.9,
+          IsEnabled = true,
+          Difficulty = "Insane"
+        }) 
+        && _moveTimer.Interval > TimeSpan.FromMilliseconds(LowestInterval))
+      {
+        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - 50;
+        _moveTimer.Interval = TimeSpan.FromMilliseconds(NewSpeed);
+        _moveTimer.Stop();
+        _moveTimer.Start();
       }
     }
   }
