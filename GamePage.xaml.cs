@@ -16,6 +16,7 @@ namespace WindowsSnake
     private System.Windows.Threading.DispatcherTimer _moveTimer;
     public double Score;
     public TextBlock ScoreText;
+    public int ApplesEaten = 0;
 
     public GamePage(MainWindow parentWindow)
     {
@@ -55,7 +56,6 @@ namespace WindowsSnake
         CheckForCollision();
         MoveBody();
       };
-      _moveTimer.Start();
     }
 
     private int[,] BoardArray;
@@ -170,6 +170,13 @@ namespace WindowsSnake
       _parentWindow.ScorePanel.Children.Add(ScoreText);
     }
 
+    private void StartGame(object sender, KeyEventArgs e)
+    {
+      PageElement.KeyDown -= StartGame;
+      PageElement.KeyDown += ProcessKeyStrokes;
+      _moveTimer.Start();
+    }
+
     private void TurnPlayer(string Direction)
     {
       switch (Direction)
@@ -192,6 +199,7 @@ namespace WindowsSnake
     private void ProcessKeyStrokes(object sender, KeyEventArgs e)
     {
       var PressedKey = e.Key;
+
       if (PressedKey == Key.Right && _player.Direction != 270)
       {
         TurnPlayer("Right");
@@ -354,7 +362,10 @@ namespace WindowsSnake
 
     private void ReplaceApple()
     {
+      ApplesEaten++;
       Score += (currentSettings.ScoreMultiplier * 100) / 100;
+
+      AddSpeedOnPoint();
 
       ScoreText.Text = ((float)Score).ToString();
 
