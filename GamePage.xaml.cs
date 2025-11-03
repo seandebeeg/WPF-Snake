@@ -19,6 +19,7 @@ namespace WindowsSnake
       _parentWindow = parentWindow;
       _parentWindow.Title = "Game";
       _parentWindow.MainNavigation.Focus();
+      _parentWindow.WindowState = System.Windows.WindowState.Normal;
 
       InitializeComponent();
 
@@ -48,8 +49,8 @@ namespace WindowsSnake
       _moveTimer.Interval = TimeSpan.FromSeconds(1 / PlayerSpeed);
       _moveTimer.Tick += (s, e) => 
       {
-        MoveBody();
         CheckForCollision();
+        MoveBody();
       };
       _moveTimer.Start();
     }
@@ -86,6 +87,7 @@ namespace WindowsSnake
 
     private readonly static GameSettings currentSettings = LoadSettings();
 
+    private Image Apple = new();
 
     private void LoadStart()
     {
@@ -128,16 +130,19 @@ namespace WindowsSnake
       GameGrid.Children.Add(_player.Body[1]);
       BoardArray[Grid.GetColumn(_player.Body[1]), Grid.GetRow(_player.Body[1])] = 1;
 
-      var apple = new Image
+      Apple = new Image
       {
         Width = cellSize,
         Height = cellSize,
         Source = new BitmapImage(new Uri("\\Assets\\Apple.png", UriKind.Relative))
       };
 
-      Grid.SetColumn(apple, _player.X + ((int)(7 * (GameGrid.ColumnDefinitions.Count / 20))));
-      Grid.SetRow(apple, _player.Y);
-      GameGrid.Children.Add(apple);
+      Grid.SetColumn(Apple, _player.X + ((int)(7 * (GameGrid.ColumnDefinitions.Count / 20))));
+      Grid.SetRow(Apple, _player.Y);
+
+      BoardArray[Grid.GetColumn(Apple), Grid.GetRow(Apple)] += 2;
+
+      GameGrid.Children.Add(Apple);
     }
 
     private void TurnPlayer(string Direction)
@@ -191,27 +196,29 @@ namespace WindowsSnake
       int OldHeadY = HeadY;
       int index = 0;
 
-      BoardArray[ HeadX, HeadY ] = 0;
-
       switch (_player.Direction)
       {
         case 0:
           HeadY--;
+          _player.Y--;
         break;
         case 90:
           HeadX++;
+          _player.X++;
         break;
         case 180:
           HeadY++;
+          _player.Y++;
         break;
         case 270:
           HeadX--;
+          _player.X--;
         break;
       }
 
       try
       { 
-        BoardArray[HeadX, HeadY] = 1;
+        BoardArray[HeadX, HeadY] += 1;
 
         Grid.SetColumn(_player.Head, HeadX);
         Grid.SetRow(_player.Head, HeadY);
@@ -224,7 +231,7 @@ namespace WindowsSnake
           if (index == 0)
           {
             BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
-            BoardArray[OldHeadX, OldHeadY] = 1;
+            BoardArray[OldHeadX, OldHeadY] += 1;
 
             Grid.SetColumn(BodySegment, OldHeadX);
             Grid.SetRow(BodySegment, OldHeadY);
@@ -232,11 +239,12 @@ namespace WindowsSnake
           else
           {
             BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
-            BoardArray[BodySegmentsX[index - 1], BodySegmentsY[index - 1]] = 1;
+            BoardArray[BodySegmentsX[index - 1], BodySegmentsY[index - 1]] += 1;
 
             Grid.SetColumn(BodySegment, BodySegmentsX[index - 1]);
             Grid.SetRow(BodySegment, BodySegmentsY[index - 1]);
           }
+
           index++;
         }
       } 
@@ -251,6 +259,7 @@ namespace WindowsSnake
           }))
         {
           _moveTimer.Stop();
+          //rest of loser logic goes here
         }
         else
         {
@@ -265,27 +274,77 @@ namespace WindowsSnake
       List<int> BodySegmentsY = new();
       int OccupiedBoardSpaces = 0;
 
-      int HeadX = Grid.GetColumn(_player.Head);
-      int HeadY = Grid.GetRow(_player.Head);
+      int HeadX = _player.X;
+      int HeadY = _player.Y;
 
-      foreach (var BodySegment in _player.Body)
+      if (BoardArray[HeadX, HeadY] >= 3)//player is on apple
       {
-        BodySegmentsX.Add(Grid.GetColumn(BodySegment));
-        BodySegmentsY.Add(Grid.GetRow(BodySegment));
+          int LastBodySegmentX = Grid.GetColumn(_player.Body.Last());
+          int LastBodySegmentY = Grid.GetRow(_player.Body.Last());
+
+          var BodySegment = new System.Windows.Shapes.Rectangle()
+          {
+            Height = cellSize,
+            Width = cellSize,
+            Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
+          };
+
+          Grid.SetColumn(BodySegment, LastBodySegmentX);
+          Grid.SetRow(BodySegment, LastBodySegmentY);
+
+          _player.Body.Add(BodySegment);
+          GameGrid.Children.Add(BodySegment);
+
+          ReplaceApple();
+          return;
       }
 
       foreach (int Space in BoardArray)
       {
-        if(Space == 1)
-        {
-          OccupiedBoardSpaces++;
-        }
+          if (Space == 1)
+          {
+              OccupiedBoardSpaces++;
+          }
       }
 
       if (OccupiedBoardSpaces < _player.Body.Count)
       {
         _moveTimer.Stop();
+        //rest of loser logic goes here
       }
+    }
+
+    private void ReplaceApple()
+    {
+      var AppleElement = new Image
+      {
+        Width = cellSize,
+        Height = cellSize,
+        Source = new BitmapImage(new Uri("\\Assets\\Apple.png", UriKind.Relative))
+      };
+
+      GameGrid.Children.Remove(Apple);
+
+      BoardArray[Grid.GetColumn(Apple), Grid.GetRow(Apple)] -= 2;
+
+      Random RandomNumber = new();
+
+      int ProjectedAppleX;
+      int ProjectedAppleY;
+
+      do
+      {
+        ProjectedAppleX = RandomNumber.Next(0, GameGrid.ColumnDefinitions.Count - 1);
+        ProjectedAppleY = RandomNumber.Next(0, GameGrid.RowDefinitions.Count - 1);
+      }while (BoardArray[ProjectedAppleX, ProjectedAppleY] == 1 || BoardArray[ProjectedAppleX, ProjectedAppleY] == 2);
+
+      Grid.SetColumn(AppleElement, ProjectedAppleX);
+      Grid.SetRow(AppleElement, ProjectedAppleY);
+
+      Apple = AppleElement;
+
+      GameGrid.Children.Add(Apple);
+      BoardArray[ProjectedAppleX, ProjectedAppleY] += 2;
     }
 
     private void RunPreGameFunctions()

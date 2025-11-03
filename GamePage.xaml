@@ -10,8 +10,8 @@
       KeyDown="ProcessKeyStrokes"
       Focusable="True"
       FocusVisualStyle="{x:Null}">
-  <Border BorderBrush="Black" BorderThickness="5" Focusable="False" x:Name="GameBorder" HorizontalAlignment="Center">
-    <Grid x:Name="GameGrid" Focusable="False" ShowGridLines="True">
+  <Border BorderBrush="Black" BorderThickness="5" Focusable="False" x:Name="GameBorder">
+    <Grid x:Name="GameGrid" Focusable="False">
     
     </Grid>
   </Border>

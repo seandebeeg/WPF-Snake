@@ -73,6 +73,8 @@ namespace WindowsSnake
 
       GameBorder.Height = (RowNumber * cellSize) + 10;
       GameBorder.Width = (ColumnNumber * cellSize) + 10;
+
+      _parentWindow.Height += 20;
     }
 
     private void DetermineSpeed()
