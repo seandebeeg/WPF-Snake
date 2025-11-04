@@ -1,8 +1,10 @@
-﻿using System.Windows;
+﻿using System.Text.Json;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace WindowsSnake
 {
@@ -15,6 +17,34 @@ namespace WindowsSnake
     public MainWindow()
     {
       InitializeComponent();
+      LoadSettings();
+    }
+
+    private static void LoadSettings()
+    {
+      var settingsPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "Snake",
+        "settings.json"
+      );
+
+      if (File.Exists(settingsPath))
+      {
+        GameSettings currentSettings = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
+      }
+      else
+      {
+        GameSettings defaultSettings = new GameSettings
+        {
+          CurrentColor = "#FF0000FF",
+          Modifiers = [],
+          ScoreMultiplier = 1,
+          Settings = [],
+          ScoreList = [],
+          HighScore = 0
+        };
+        File.WriteAllText(settingsPath, JsonSerializer.Serialize(defaultSettings));
+      }
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
