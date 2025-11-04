@@ -3,7 +3,7 @@
   public class GameSettings
   {
     public int HighScore { get; set; }
-    public List<Score>? ScoreEntries { get; set; }
+    public List<Score>? ScoreList { get; set; }
     public List<ModifierItem>? Modifiers { get; set; }
     public List<SettingsItem>? Settings { get; set; }
     public string? CurrentColor { get; set; }
@@ -43,7 +43,7 @@
   public class Score
   {
     public bool IsHighScore { get; set; }
-    public int ScoreNumber { get; set; }
+    public double ScoreNumber { get; set; }
     public required string TimeObtained { get; set; }
   }
 

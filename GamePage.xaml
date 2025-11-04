@@ -13,7 +13,15 @@
       x:Name="PageElement">
   <Border BorderBrush="Black" BorderThickness="5" Focusable="False" x:Name="GameBorder">
     <Grid x:Name="GameGrid" Focusable="False">
-    
+      <Popup IsOpen="False" x:Name="LoserPopup" StaysOpen="True" Placement="Center" PlacementTarget="{Binding ElementName = GameGrid}">
+        <Border BorderThickness="5" CornerRadius="15" Height="350" Width="350">
+          <Grid Background="White" x:Name="LoserPopupGrid">
+            <TextBlock Text="Game Over" FontSize="30" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            <Button HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10,0,0,10" Content="Play Again" Click="PlayAgain" Style="{StaticResource WindowButtonTriggers}" Height="38px" Width="100px" Background="LightGreen" Foreground="White"/>
+            <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10" Content="Back to Menu" Click="GoToMainMenu" Style="{StaticResource WindowButtonTriggers}" Height="38px" Width="100px" Background="Red" Foreground="White"/>
+          </Grid>
+        </Border>
+      </Popup>
     </Grid>
   </Border>
 </Page>

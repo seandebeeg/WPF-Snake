@@ -32,9 +32,9 @@ namespace WindowsSnake
         if (File.Exists(settingsPath))
         {
           GameSettings currentScores = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
-          if (currentScores?.ScoreEntries != null)
+          if (currentScores?.ScoreList != null)
           {
-            ScoresListView.ItemsSource = currentScores.ScoreEntries;
+            ScoresListView.ItemsSource = currentScores.ScoreList;
           }
           else
           {
@@ -61,7 +61,7 @@ namespace WindowsSnake
       );
       GameSettings currentScores = JsonSerializer.Deserialize<GameSettings>(File.ReadAllText(settingsPath));
 
-      currentScores.ScoreEntries = null;
+      currentScores.ScoreList = new();
       JsonSerializerOptions scoreDeletion = new JsonSerializerOptions { WriteIndented = true };
       string updatedJsonScores = JsonSerializer.Serialize(currentScores, scoreDeletion);
       File.WriteAllText(settingsPath, updatedJsonScores);

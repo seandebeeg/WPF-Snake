@@ -79,16 +79,18 @@ namespace WindowsSnake
         GameSettings defaultSettings = new GameSettings
         {
           CurrentColor = "#FF0000FF",
-          Modifiers = null,
+          Modifiers = [],
           ScoreMultiplier = 1,
-          Settings = null
+          Settings = [],
+          ScoreList = [],
+          HighScore = 0
         };
         File.WriteAllText(settingsPath, JsonSerializer.Serialize(defaultSettings));
         return defaultSettings;
       }
     }
 
-    private readonly static GameSettings currentSettings = LoadSettings();
+    private static GameSettings currentSettings = LoadSettings();
 
     private Image Apple = new();
 
@@ -292,7 +294,7 @@ namespace WindowsSnake
           }))
         {
           _moveTimer.Stop();
-          //rest of loser logic goes here
+          HandleLoss();
         }
         else
         {
@@ -356,7 +358,7 @@ namespace WindowsSnake
         }))
       {
         _moveTimer.Stop();
-        //rest of loser logic goes here
+        HandleLoss();
       }
     }
 
@@ -398,6 +400,52 @@ namespace WindowsSnake
 
       GameGrid.Children.Add(Apple);
       BoardArray[ProjectedAppleX, ProjectedAppleY] += 2;
+    }
+
+    private void HandleLoss()
+    {
+      List<double> CurrentScores = new();
+
+      var settingsPath = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+        "Snake",
+        "settings.json"
+      );
+
+      foreach (WindowsSnake.Score Entry in currentSettings.ScoreList)
+      {
+        CurrentScores.Add(Entry.ScoreNumber);
+      }
+
+      if (CurrentScores.Count == 0 || Score >= CurrentScores.Max() )
+      {
+        currentSettings.ScoreList.Add(new WindowsSnake.Score() { IsHighScore = true, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString() });
+      }
+      else
+      {
+        currentSettings.ScoreList.Add(new WindowsSnake.Score { IsHighScore = false, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString() });
+      }
+
+      
+
+      JsonSerializerOptions WriteOptions = new JsonSerializerOptions { WriteIndented = true };
+
+      var NewScores = JsonSerializer.Serialize<GameSettings>(currentSettings, WriteOptions);
+
+      File.WriteAllText(settingsPath, NewScores);
+
+      LoserPopup.IsOpen = true;
+
+    }
+
+    private void PlayAgain(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void GoToMainMenu(object sender, RoutedEventArgs e)
+    {
+      _parentWindow.MainNavigation.Navigate(new MainMenu(_parentWindow));
     }
 
     private void RunPreGameFunctions()
