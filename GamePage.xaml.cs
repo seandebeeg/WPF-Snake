@@ -445,6 +445,7 @@ namespace WindowsSnake
 
     private void GoToMainMenu(object sender, RoutedEventArgs e)
     {
+      _parentWindow.ScorePanel.Children.Clear();
       _parentWindow.MainNavigation.Navigate(new MainMenu(_parentWindow));
     }
 
