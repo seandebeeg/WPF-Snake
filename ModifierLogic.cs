@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace WindowsSnake
 {
@@ -128,7 +129,7 @@ namespace WindowsSnake
           && ApplesEaten % 5 == 0 
           && _moveTimer.Interval > TimeSpan.FromMilliseconds(LowestInterval))
       {
-        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - 50;
+        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - (PlayerSpeed * 0.05);
         _moveTimer.Interval = TimeSpan.FromMilliseconds(NewSpeed);
         _moveTimer.Stop();
         _moveTimer.Start();
@@ -142,7 +143,7 @@ namespace WindowsSnake
         }) 
         && _moveTimer.Interval > TimeSpan.FromMilliseconds(LowestInterval))
       {
-        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - 50;
+        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - (PlayerSpeed * 0.05);
         _moveTimer.Interval = TimeSpan.FromMilliseconds(NewSpeed);
         _moveTimer.Stop();
         _moveTimer.Start();
@@ -216,6 +217,79 @@ namespace WindowsSnake
       {
         TurnPlayer("Up");
       }
+    }
+
+    private void ProcessDoubleGrowth()
+    {
+      int LastBodySegmentX = Grid.GetColumn(_player.Body.Last());
+      int LastBodySegmentY = Grid.GetRow(_player.Body.Last());
+
+      var BodySegment2 = new System.Windows.Shapes.Rectangle()
+      {
+        Height = cellSize,
+        Width = cellSize,
+        Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
+      };
+
+      if (LastBodySegmentX == 0 && LastBodySegmentY == 0)
+      {
+        Grid.SetColumn(BodySegment2, LastBodySegmentX + 1);
+        Grid.SetRow(BodySegment2, LastBodySegmentY);
+      }
+      else if (LastBodySegmentX == GameGrid.ColumnDefinitions.Count && LastBodySegmentY > GameGrid.RowDefinitions.Count)
+      {
+        Grid.SetColumn(BodySegment2, LastBodySegmentX - 1);
+        Grid.SetRow(BodySegment2, LastBodySegmentY);
+      }
+      else if (LastBodySegmentX == GameGrid.ColumnDefinitions.Count && LastBodySegmentY == 0)
+      {
+        Grid.SetColumn(BodySegment2, LastBodySegmentX - 1);
+        Grid.SetRow(BodySegment2, LastBodySegmentY);
+      }
+      else if (LastBodySegmentX == 0 && LastBodySegmentY == GameGrid.RowDefinitions.Count)
+      {
+        Grid.SetColumn(BodySegment2, LastBodySegmentX + 1);
+        Grid.SetRow(BodySegment2, LastBodySegmentY);
+      }
+      else if (LastBodySegmentX == 0)
+      {
+        LastBodySegmentY--;
+      }
+      else if (LastBodySegmentY == 0)
+      {
+        LastBodySegmentX--;
+      }
+      else if (LastBodySegmentX == GameGrid.ColumnDefinitions.Count)
+      {
+        LastBodySegmentY++;
+      }
+      else if (LastBodySegmentY == GameGrid.RowDefinitions.Count)
+      {
+        LastBodySegmentX++;
+      }
+      else
+      {
+        switch (_player.Direction)
+        {
+          case 0:
+            LastBodySegmentY++;
+            break;
+          case 90:
+            LastBodySegmentX--;
+            break;
+          case 180:
+            LastBodySegmentY--;
+            break;
+          case 270:
+            LastBodySegmentX++;
+            break;
+        }
+        Grid.SetColumn(BodySegment2, LastBodySegmentX);
+        Grid.SetRow(BodySegment2, LastBodySegmentY);
+      }
+      _player.Body.Add(BodySegment2);
+      GameGrid.Children.Add(BodySegment2);
+      BoardArray[LastBodySegmentX, LastBodySegmentY] = 1;
     }
   }
 }

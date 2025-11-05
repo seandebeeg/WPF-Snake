@@ -374,7 +374,18 @@ namespace WindowsSnake
 
           _player.Body.Add(BodySegment);
           GameGrid.Children.Add(BodySegment);
+          BoardArray[LastBodySegmentX, LastBodySegmentY] = 1;
 
+          if (currentSettings.Modifiers.Contains(new ModifierItem 
+            { Name = "Double Growth",
+              Multiplier = 0.75,
+              IsEnabled = true,
+              Difficulty = "Insane" 
+            }))
+          {
+            ProcessDoubleGrowth();
+          }
+          MoveBody();
           ReplaceApple();
           return;
         }
@@ -472,23 +483,18 @@ namespace WindowsSnake
 
       if (CurrentScores.Count == 0 || Score >= CurrentScores.Max() )
       {
-        currentSettings.ScoreList.Add(new WindowsSnake.Score() { IsHighScore = true, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
+        currentSettings.ScoreList.Add(new WindowsSnake.Score() { IsHighScore = true, ScoreNumber = ((float)(Score)), TimeObtained = DateTime.Today.ToString("d") });
       }
       else
       {
-        currentSettings.ScoreList.Add(new WindowsSnake.Score { IsHighScore = false, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
+        currentSettings.ScoreList.Add(new WindowsSnake.Score { IsHighScore = false, ScoreNumber = ((float)(Score)), TimeObtained = DateTime.Today.ToString("d") });
       }
-
-      
-
       JsonSerializerOptions WriteOptions = new JsonSerializerOptions { WriteIndented = true };
 
       var NewScores = JsonSerializer.Serialize<GameSettings>(currentSettings, WriteOptions);
-
       File.WriteAllText(settingsPath, NewScores);
 
-      GameOverScoreText.Text = $"You got {Score} Point(s)";
-
+      GameOverScoreText.Text = $"You got {((float)(Score))} Point(s)";
       LoserPopup.IsOpen = true;
 
     }
