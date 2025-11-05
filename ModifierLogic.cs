@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace WindowsSnake
@@ -147,6 +146,75 @@ namespace WindowsSnake
         _moveTimer.Interval = TimeSpan.FromMilliseconds(NewSpeed);
         _moveTimer.Stop();
         _moveTimer.Start();
+      }
+    }
+
+    private void ProcessDUI()
+    {
+      if (currentSettings.Modifiers.Contains(new ModifierItem 
+        { 
+          Name = "D.W.I",
+          Difficulty = "Hard",
+          Multiplier = 0.5,
+          IsEnabled = true
+      }))
+      {
+        Random randomTime = new();
+
+        int time = randomTime.Next(5, 10);
+        _duiTimer = new();
+        _duiTimer.Interval = TimeSpan.FromSeconds(time);
+        _duiTimer.Tick += (s, e) => 
+        { 
+          DrunkTurn();
+          ProcessDUI();
+        };
+        _duiTimer.Stop();
+        _duiTimer.Start();
+      }
+      else if (currentSettings.Modifiers.Contains(new ModifierItem
+      {
+        Name = "D.U.I",
+        Difficulty = "Insane",
+        Multiplier = 1.0,
+        IsEnabled = true
+      }))
+      {
+        Random randomTime = new();
+
+        int time = randomTime.Next(1, 4);
+        _duiTimer = new();
+        _duiTimer.Interval = TimeSpan.FromSeconds(time);
+        _duiTimer.Tick += (s, e) =>
+        {
+          DrunkTurn();
+          ProcessDUI();
+        };
+        _duiTimer.Stop();
+        _duiTimer.Start();
+      }
+    }
+
+    private void DrunkTurn()
+    {
+      Random TurnNumber = new();
+      int Turn = TurnNumber.Next(1, 4);
+
+      if (Turn == 1 && _player.Direction != 270)
+      {
+        TurnPlayer("Right");
+      }
+      else if (Turn == 2 && _player.Direction != 0)
+      {
+        TurnPlayer("Down");
+      }
+      else if (Turn == 3 && _player.Direction != 90)
+      {
+        TurnPlayer("Left");
+      }
+      else if (Turn == 4 && _player.Direction != 180)
+      {
+        TurnPlayer("Up");
       }
     }
   }

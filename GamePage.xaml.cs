@@ -14,6 +14,7 @@ namespace WindowsSnake
     private PlayerClass _player;
     private double cellSize;
     private System.Windows.Threading.DispatcherTimer _moveTimer;
+    private System.Windows.Threading.DispatcherTimer _duiTimer;
     public double Score;
     public TextBlock ScoreText;
     public int ApplesEaten = 0;
@@ -53,9 +54,11 @@ namespace WindowsSnake
       _moveTimer.Interval = TimeSpan.FromSeconds(1 / PlayerSpeed);
       _moveTimer.Tick += (s, e) => 
       {
-        CheckForCollision();
         MoveBody();
+        CheckForCollision();
       };
+
+      ProcessDUI();
     }
 
     private int[,] BoardArray;
@@ -293,6 +296,7 @@ namespace WindowsSnake
             Multiplier = -1000
           }))
         {
+          _duiTimer.Stop();
           _moveTimer.Stop();
           HandleLoss();
         }
@@ -312,8 +316,10 @@ namespace WindowsSnake
       int HeadX = _player.X;
       int HeadY = _player.Y;
 
-      if (BoardArray[HeadX, HeadY] >= 3)//player is on apple
+      try
       {
+        if (BoardArray[HeadX, HeadY] >= 3)//player is on apple
+        {
           int LastBodySegmentX = Grid.GetColumn(_player.Body.Last());
           int LastBodySegmentY = Grid.GetRow(_player.Body.Last());
 
@@ -332,31 +338,39 @@ namespace WindowsSnake
 
           ReplaceApple();
           return;
-      }
+        }
 
-      foreach (int Space in BoardArray)
-      {
+        foreach (int Space in BoardArray)
+        {
           if (Space == 1)
           {
-              OccupiedBoardSpaces++;
+            OccupiedBoardSpaces++;
           }
-      }
+        }
 
-      if (OccupiedBoardSpaces > _player.Body.Count + 1 
-        && !currentSettings.Modifiers.Contains(new ModifierItem 
-        { 
-          Name = "Overlap",
-          Multiplier = -0.25,
-          IsEnabled = true,
-          Difficulty = "Easy" 
-        }) && !currentSettings.Modifiers.Contains(new ModifierItem
+        if (OccupiedBoardSpaces < _player.Body.Count
+          && !currentSettings.Modifiers.Contains(new ModifierItem
+          {
+            Name = "Overlap",
+            Multiplier = -0.25,
+            IsEnabled = true,
+            Difficulty = "Easy"
+          }) && !currentSettings.Modifiers.Contains(new ModifierItem
+          {
+            Name = "Invincibility",
+            Multiplier = -1000,
+            IsEnabled = true,
+            Difficulty = "Easy"
+          }))
         {
-          Name = "Invincibility",
-          Multiplier = -1000,
-          IsEnabled = true,
-          Difficulty = "Easy"
-        }))
+          _duiTimer.Stop();
+          _moveTimer.Stop();
+          HandleLoss();
+        }
+      }
+      catch (Exception) // double check for wall hit
       {
+        _duiTimer.Stop();
         _moveTimer.Stop();
         HandleLoss();
       }
