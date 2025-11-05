@@ -201,25 +201,64 @@ namespace WindowsSnake
       }
     }
 
+    private DateTime _lastTurnTime = DateTime.MinValue;
+    private const double TURN_BUFFER_TIME = 0.1;
+    private Key? _bufferedInput;
+
     private void ProcessKeyStrokes(object sender, KeyEventArgs e)
     {
       var PressedKey = e.Key;
+      var currentTime = DateTime.Now;
+      var timeSinceLastTurn = (currentTime - _lastTurnTime).TotalSeconds;
 
-      if (PressedKey == Key.Right && _player.Direction != 270)
+      if (IsValidTurn(PressedKey, _player.Direction))
+      {
+        _bufferedInput = PressedKey;
+      }
+      if (timeSinceLastTurn < TURN_BUFFER_TIME)
+      {
+        return;
+      }
+      if (_bufferedInput.HasValue)
+      {
+        ProcessTurn(_bufferedInput.Value);
+        _bufferedInput = null;
+      }
+    }
+
+    private bool IsValidTurn(Key pressedKey, int currentDirection)
+    {
+      return pressedKey switch
+      {
+        Key.Right => currentDirection != 270,
+        Key.Down => currentDirection != 0,
+        Key.Left => currentDirection != 90,
+        Key.Up => currentDirection != 180,
+        _ => false
+      };
+    }
+
+    private void ProcessTurn(Key pressedKey)
+    {
+      if (pressedKey == Key.Right)
       {
         TurnPlayer("Right");
+        _lastTurnTime = DateTime.Now;
       }
-      else if (PressedKey == Key.Down && _player.Direction != 0)
+      else if (pressedKey == Key.Down)
       {
         TurnPlayer("Down");
+        _lastTurnTime = DateTime.Now;
       }
-      else if (PressedKey == Key.Left && _player.Direction != 90)
+      else if (pressedKey == Key.Left)
       {
         TurnPlayer("Left");
+        _lastTurnTime = DateTime.Now;
       }
-      else if (PressedKey == Key.Up && _player.Direction != 180)
+      else if (pressedKey == Key.Up)
       {
         TurnPlayer("Up");
+        _lastTurnTime = DateTime.Now;
       }
     }
 
@@ -296,7 +335,7 @@ namespace WindowsSnake
             Multiplier = -1000
           }))
         {
-          _duiTimer.Stop();
+          if (currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.W.I", Difficulty = "Hard", Multiplier = 0.5, IsEnabled = true }) || currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.U.I", Difficulty = "Insane", Multiplier = 1.0, IsEnabled = true })) _duiTimer.Stop();
           _moveTimer.Stop();
           HandleLoss();
         }
@@ -363,14 +402,14 @@ namespace WindowsSnake
             Difficulty = "Easy"
           }))
         {
-          _duiTimer.Stop();
+          if(currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.W.I", Difficulty = "Hard", Multiplier = 0.5, IsEnabled = true}) || currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.U.I", Difficulty = "Insane", Multiplier = 1.0, IsEnabled = true })) _duiTimer.Stop();
           _moveTimer.Stop();
           HandleLoss();
         }
       }
       catch (Exception) // double check for wall hit
       {
-        _duiTimer.Stop();
+        if (currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.W.I", Difficulty = "Hard", Multiplier = 0.5, IsEnabled = true }) || currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.U.I", Difficulty = "Insane", Multiplier = 1.0, IsEnabled = true })) _duiTimer.Stop();
         _moveTimer.Stop();
         HandleLoss();
       }
@@ -433,11 +472,11 @@ namespace WindowsSnake
 
       if (CurrentScores.Count == 0 || Score >= CurrentScores.Max() )
       {
-        currentSettings.ScoreList.Add(new WindowsSnake.Score() { IsHighScore = true, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString() });
+        currentSettings.ScoreList.Add(new WindowsSnake.Score() { IsHighScore = true, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
       }
       else
       {
-        currentSettings.ScoreList.Add(new WindowsSnake.Score { IsHighScore = false, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString() });
+        currentSettings.ScoreList.Add(new WindowsSnake.Score { IsHighScore = false, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
       }
 
       
@@ -448,13 +487,16 @@ namespace WindowsSnake
 
       File.WriteAllText(settingsPath, NewScores);
 
+      GameOverScoreText.Text = $"You got {Score} Point(s)";
+
       LoserPopup.IsOpen = true;
 
     }
 
     private void PlayAgain(object sender, RoutedEventArgs e)
     {
-
+      _parentWindow.ScorePanel.Children.Clear();
+      _parentWindow.MainNavigation.Navigate(new GamePage(_parentWindow));
     }
 
     private void GoToMainMenu(object sender, RoutedEventArgs e)
