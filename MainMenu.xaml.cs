@@ -33,10 +33,6 @@ namespace WindowsSnake
           _parentWindow.MainNavigation.Navigate(new ColorsPage(_parentWindow));
         break;
 
-        case "Settings":
-          _parentWindow.MainNavigation.Navigate(new SettingsPage(_parentWindow));
-        break;
-
         case "Modifiers":
           _parentWindow.MainNavigation.Navigate(new ModifiersPage(_parentWindow));
         break;

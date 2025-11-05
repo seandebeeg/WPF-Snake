@@ -5,7 +5,6 @@
     public int HighScore { get; set; }
     public List<Score>? ScoreList { get; set; }
     public List<ModifierItem>? Modifiers { get; set; }
-    public List<SettingsItem>? Settings { get; set; }
     public string? CurrentColor { get; set; }
     public double ScoreMultiplier { get; set; }
   }
@@ -45,12 +44,5 @@
     public bool IsHighScore { get; set; }
     public double ScoreNumber { get; set; }
     public required string TimeObtained { get; set; }
-  }
-
-  public class SettingsItem
-  {
-    public bool IsEnabled { get; set; }
-    public required string Name { get; set; }
-    public required string Type { get; set; }
   }
 }

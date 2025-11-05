@@ -39,7 +39,6 @@ namespace WindowsSnake
           CurrentColor = "#FF0000FF",
           Modifiers = [],
           ScoreMultiplier = 1,
-          Settings = [],
           ScoreList = [],
           HighScore = 0
         };
