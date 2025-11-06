@@ -10,6 +10,7 @@ namespace WindowsSnake
 {
   public partial class GamePage : Page
   {
+    private GameSettings currentSettings;
     private MainWindow _parentWindow;
     private PlayerClass _player;
     private double cellSize;
@@ -26,11 +27,13 @@ namespace WindowsSnake
       _parentWindow.MainNavigation.Focus();
       _parentWindow.WindowState = System.Windows.WindowState.Normal;
 
+      currentSettings = LoadSettings();
+
       InitializeComponent();
 
       this.Loaded += (s, e) => this.Focus();
 
-      PlayerClass player = new()
+      PlayerClass player = new(currentSettings)
       {
         Direction = 90,
         X = 0,
@@ -91,8 +94,6 @@ namespace WindowsSnake
         return defaultSettings;
       }
     }
-
-    private static GameSettings currentSettings = LoadSettings();
 
     private Image Apple = new();
 

@@ -10,8 +10,16 @@ namespace WindowsSnake
       public required int X { get; set; }
       public required int Y { get; set; }
       public required int Direction { get; set; }
-      public required Rectangle Head = new Rectangle { Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor) };
+      public Rectangle Head { get; set; }
       public List<Rectangle> Body = new List<Rectangle>();
+
+      public PlayerClass(GameSettings currentSettings)
+      {
+        Head = new Rectangle
+        {
+          Fill = (Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
+        };
+      }
     }
   }
 }
