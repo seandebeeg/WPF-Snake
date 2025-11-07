@@ -202,7 +202,7 @@ namespace WindowsSnake
     }
 
     private DateTime _lastTurnTime = DateTime.MinValue;
-    private const double TURN_BUFFER_TIME = 0.1;
+    private const double TURN_BUFFER_TIME = 0.05;
     private Key? _bufferedInput;
 
     private void ProcessKeyStrokes(object sender, KeyEventArgs e)
@@ -341,7 +341,7 @@ namespace WindowsSnake
         }
         else
         {
-          //invincibility logic goes here
+          HandleInvincibility();
         }
       }
     }
@@ -420,9 +420,22 @@ namespace WindowsSnake
       }
       catch (Exception) // double check for wall hit
       {
-        if (currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.W.I", Difficulty = "Hard", Multiplier = 0.5, IsEnabled = true }) || currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.U.I", Difficulty = "Insane", Multiplier = 1.0, IsEnabled = true })) _duiTimer.Stop();
-        _moveTimer.Stop();
-        HandleLoss();
+        if (!currentSettings.Modifiers.Contains(new ModifierItem
+        {
+          Name = "Invincibility",
+          Multiplier = -1000,
+          IsEnabled = true,
+          Difficulty = "Easy"
+        }))
+        {
+          if (currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.W.I", Difficulty = "Hard", Multiplier = 0.5, IsEnabled = true }) || currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.U.I", Difficulty = "Insane", Multiplier = 1.0, IsEnabled = true })) _duiTimer.Stop();
+          _moveTimer.Stop();
+          HandleLoss();
+        }
+        else
+        {
+          HandleInvincibility();
+        }
       }
     }
 

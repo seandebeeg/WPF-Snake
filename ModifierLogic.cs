@@ -273,16 +273,16 @@ namespace WindowsSnake
         {
           case 0:
             LastBodySegmentY++;
-            break;
+          break;
           case 90:
             LastBodySegmentX--;
-            break;
+          break;
           case 180:
             LastBodySegmentY--;
-            break;
+          break;
           case 270:
             LastBodySegmentX++;
-            break;
+          break;
         }
         Grid.SetColumn(BodySegment2, LastBodySegmentX);
         Grid.SetRow(BodySegment2, LastBodySegmentY);
@@ -290,6 +290,21 @@ namespace WindowsSnake
       _player.Body.Add(BodySegment2);
       GameGrid.Children.Add(BodySegment2);
       BoardArray[LastBodySegmentX, LastBodySegmentY] = 1;
+    }
+
+    private void HandleInvincibility()
+    {
+      GameGrid.Children.Remove(_player.Head);
+
+      if (_player.Direction == 0) _player.Y = GameGrid.RowDefinitions.Count - 1;
+      else if (_player.Direction == 90) _player.X = 0;
+      else if (_player.Direction == 180) _player.Y = 0;
+      else if (_player.Direction == 270) _player.X = GameGrid.ColumnDefinitions.Count - 1;
+
+      BoardArray[_player.X, _player.Y] = 1;
+      Grid.SetColumn(_player.Head, _player.X);
+      Grid.SetRow(_player.Head, _player.Y);
+      GameGrid.Children.Add(_player.Head);
     }
   }
 }
