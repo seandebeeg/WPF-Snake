@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using System.Diagnostics;
 
 namespace WindowsSnake
 {
@@ -58,6 +59,7 @@ namespace WindowsSnake
       _moveTimer.Interval = TimeSpan.FromSeconds(1 / PlayerSpeed);
       _moveTimer.Tick += (s, e) => 
       {
+        CheckForCollision();
         MoveBody();
         CheckForCollision();
       };
@@ -351,10 +353,7 @@ namespace WindowsSnake
 
     private void CheckForCollision() //multi, poison, and decoy yet to be implemented
     {
-      List<int> BodySegmentsX = new();
-      List<int> BodySegmentsY = new();
       int OccupiedBoardSpaces = 0;
-
       int HeadX = _player.X;
       int HeadY = _player.Y;
 
@@ -364,7 +363,6 @@ namespace WindowsSnake
         {
           int LastBodySegmentX = Grid.GetColumn(_player.Body.Last());
           int LastBodySegmentY = Grid.GetRow(_player.Body.Last());
-
           var BodySegment = new System.Windows.Shapes.Rectangle()
           {
             Height = cellSize,
@@ -392,6 +390,13 @@ namespace WindowsSnake
           ReplaceApple();
           return;
         }
+        else if (BoardArray[HeadX, HeadY] == 4
+          || BoardArray[HeadX, HeadY] == 5
+          || BoardArray[HeadX, HeadY] == 6)
+        {
+          ReplaceSpecialApple();
+          return;
+        }
 
         foreach (int Space in BoardArray)
         {
@@ -415,8 +420,7 @@ namespace WindowsSnake
           IsEnabled = true,
           Difficulty = "Easy"
         };
-
-        if (OccupiedBoardSpaces < _player.Body.Count 
+        if (OccupiedBoardSpaces < _player.Body.Count
           && !currentSettings.Modifiers.Contains(Overlap) 
           && !currentSettings.Modifiers.Contains(Invincibility))
         {

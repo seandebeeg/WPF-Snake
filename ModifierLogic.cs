@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.Eventing.Reader;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace WindowsSnake
 {
@@ -16,7 +18,7 @@ namespace WindowsSnake
       int ColumnNumber = DefaultColumns;
 
       _parentWindow.Width = _parentWindow.Height;
-      
+
       if (currentSettings.Modifiers != null)
       {
         foreach (ModifierItem Modifier in currentSettings.Modifiers)
@@ -27,16 +29,16 @@ namespace WindowsSnake
             {
               default:
                 BoardMultiplier = 1.00;
-              break;
+                break;
               case "Bigger Board":
                 BoardMultiplier = 1.75;
-              break;
+                break;
               case "Small Board":
                 BoardMultiplier = 0.5;
-              break;
+                break;
               case "Tiny Board":
                 BoardMultiplier = 0.25;
-              break;
+                break;
             }
             RowNumber = ((int)(DefaultRows * BoardMultiplier));
             ColumnNumber = ((int)(DefaultColumns * BoardMultiplier));
@@ -94,16 +96,16 @@ namespace WindowsSnake
             {
               default:
                 speedMultiplier = 1;
-              break;
+                break;
               case "Slowness":
                 speedMultiplier = 0.5;
-              break;
+                break;
               case "Fast Speed":
                 speedMultiplier = 2;
-              break;
+                break;
               case "Super Speed":
                 speedMultiplier = 4;
-              break;
+                break;
             }
             PlayerSpeed = speedMultiplier * defaultSpeed;
           }
@@ -119,14 +121,14 @@ namespace WindowsSnake
     {
       const int LowestInterval = 50;
 
-      if (currentSettings.Modifiers.Contains(new ModifierItem 
-        { 
-          Name = "Speed Increase Every 5 Points",
-          Multiplier = 0.45,
-          IsEnabled = true,
-          Difficulty = "Hard" 
-        })
-          && ApplesEaten % 5 == 0 
+      if (currentSettings.Modifiers.Contains(new ModifierItem
+      {
+        Name = "Speed Increase Every 5 Points",
+        Multiplier = 0.45,
+        IsEnabled = true,
+        Difficulty = "Hard"
+      })
+          && ApplesEaten % 5 == 0
           && _moveTimer.Interval > TimeSpan.FromMilliseconds(LowestInterval))
       {
         double NewSpeed = _moveTimer.Interval.TotalMilliseconds - (PlayerSpeed * 0.05);
@@ -135,12 +137,12 @@ namespace WindowsSnake
         _moveTimer.Start();
       }
       if (currentSettings.Modifiers.Contains(new ModifierItem //allows the two modifiers to stack
-        {
-          Name = "Speed Increase Every Point",
-          Multiplier = 0.9,
-          IsEnabled = true,
-          Difficulty = "Insane"
-        }) 
+      {
+        Name = "Speed Increase Every Point",
+        Multiplier = 0.9,
+        IsEnabled = true,
+        Difficulty = "Insane"
+      })
         && _moveTimer.Interval > TimeSpan.FromMilliseconds(LowestInterval))
       {
         double NewSpeed = _moveTimer.Interval.TotalMilliseconds - (PlayerSpeed * 0.05);
@@ -152,12 +154,12 @@ namespace WindowsSnake
 
     private void ProcessDUI()
     {
-      if (currentSettings.Modifiers.Contains(new ModifierItem 
-        { 
-          Name = "D.W.I",
-          Difficulty = "Hard",
-          Multiplier = 0.5,
-          IsEnabled = true
+      if (currentSettings.Modifiers.Contains(new ModifierItem
+      {
+        Name = "D.W.I",
+        Difficulty = "Hard",
+        Multiplier = 0.5,
+        IsEnabled = true
       }))
       {
         Random randomTime = new();
@@ -165,8 +167,8 @@ namespace WindowsSnake
         int time = randomTime.Next(5, 10);
         _duiTimer = new();
         _duiTimer.Interval = TimeSpan.FromSeconds(time);
-        _duiTimer.Tick += (s, e) => 
-        { 
+        _duiTimer.Tick += (s, e) =>
+        {
           DrunkTurn();
           ProcessDUI();
         };
@@ -294,8 +296,6 @@ namespace WindowsSnake
 
     private void HandleInvincibility()
     {
-      GameGrid.Children.Remove(_player.Head);
-
       if (_player.Direction == 0) _player.Y = GameGrid.RowDefinitions.Count - 1;
       else if (_player.Direction == 90) _player.X = 0;
       else if (_player.Direction == 180) _player.Y = 0;
@@ -305,6 +305,129 @@ namespace WindowsSnake
       Grid.SetColumn(_player.Head, _player.X);
       Grid.SetRow(_player.Head, _player.Y);
       GameGrid.Children.Add(_player.Head);
+    }
+
+    ModifierItem MultipleApples = new ModifierItem
+    {
+      Name = "Multiple Apples",
+      Multiplier = -0.2,
+      IsEnabled = true,
+      Difficulty = "Easy"
+    };
+    ModifierItem DecoyApples = new ModifierItem
+    {
+      Name = "Decoy Apples",
+      Multiplier = 0.35,
+      IsEnabled = true,
+      Difficulty = "Hard"
+    };
+    ModifierItem PoisonApples = new ModifierItem
+    {
+      Name = "Poison Apples",
+      Multiplier = 0.5,
+      IsEnabled = true,
+      Difficulty = "Insane"
+    };
+
+    private void AddExtraApples()
+    {
+     
+      if (currentSettings.Modifiers.Contains(MultipleApples)
+        || currentSettings.Modifiers.Contains(DecoyApples)
+        || currentSettings.Modifiers.Contains(PoisonApples))
+      {
+        int ExtraAppleBoardCode = 0;
+
+        foreach (ModifierItem Mod in currentSettings.Modifiers)
+        {
+          if (Mod.Name == "Multiple Apples") ExtraAppleBoardCode = 3;
+          else if (Mod.Name == "Decoy Apples") ExtraAppleBoardCode = 4;
+          else if (Mod.Name == "Poison Apples") ExtraAppleBoardCode = 5;
+        }
+        for (int i = 0; i < 2; i++)
+        {
+          var AppleElement = new Image
+          {
+            Width = cellSize,
+            Height = cellSize,
+            Source = new BitmapImage(new Uri("\\Assets\\Apple.png", UriKind.Relative))
+          };
+
+          Grid.SetColumn(AppleElement, _player.X + ((int)(7 * (GameGrid.ColumnDefinitions.Count / 20)) + (i + 1)));
+          Grid.SetRow(AppleElement, _player.Y);
+
+          BoardArray[Grid.GetColumn(AppleElement), Grid.GetRow(AppleElement)] += ExtraAppleBoardCode;
+          GameGrid.Children.Add(AppleElement);
+          ExtraApples.Add(AppleElement);
+        }
+      }
+    }
+
+    private void ReplaceSpecialApple()
+    {
+      if (currentSettings.Modifiers.Contains(MultipleApples)
+        || currentSettings.Modifiers.Contains(DecoyApples)
+        || currentSettings.Modifiers.Contains(PoisonApples))
+      {
+        int ExtraAppleBoardCode = 0;
+
+        foreach (ModifierItem Mod in currentSettings.Modifiers)
+        {
+          if (Mod.Name == "Multiple Apples") ExtraAppleBoardCode = 3;
+          else if (Mod.Name == "Decoy Apples") ExtraAppleBoardCode = 4;
+          else if (Mod.Name == "PoisonApples") ExtraAppleBoardCode = 5;
+        }
+
+        if (ExtraAppleBoardCode == 3)
+        {
+          Score += (currentSettings.ScoreMultiplier * 100) / 100;
+          ApplesEaten++;
+        }
+        else if (ExtraAppleBoardCode == 5)
+        {
+          Score -= (currentSettings.ScoreMultiplier * 100) / 100;
+        }
+
+        ScoreText.Text = ((float)Score).ToString();
+
+        var EatenApple = ExtraApples.Find((Image Apple) =>
+          Grid.GetColumn(Apple) == _player.X
+          && Grid.GetRow(Apple) == _player.Y)
+        ;
+
+        BoardArray[Grid.GetColumn(EatenApple), Grid.GetRow(EatenApple)] = 1;
+        GameGrid.Children.Remove(EatenApple);
+
+        var AppleElement = new Image
+        {
+          Width = cellSize,
+          Height = cellSize,
+          Source = new BitmapImage(new Uri("\\Assets\\Apple.png", UriKind.Relative))
+        };
+
+        int ProjectedAppleX;
+        int ProjectedAppleY;
+
+        Random RandomNumber = new();
+
+        do
+        {
+          ProjectedAppleX = RandomNumber.Next(0, GameGrid.ColumnDefinitions.Count - 1);
+          ProjectedAppleY = RandomNumber.Next(0, GameGrid.RowDefinitions.Count - 1);
+        }
+        while (BoardArray[ProjectedAppleX, ProjectedAppleY] == 1
+          || BoardArray[ProjectedAppleX, ProjectedAppleY] == 2
+          || BoardArray[ProjectedAppleX, ProjectedAppleY] == 3
+          || BoardArray[ProjectedAppleX, ProjectedAppleY] == 4
+          || BoardArray[ProjectedAppleX, ProjectedAppleY] == 5
+        );
+        Grid.SetColumn(AppleElement, ProjectedAppleX);
+        Grid.SetRow(AppleElement, ProjectedAppleY);
+
+        BoardArray[Grid.GetColumn(AppleElement), Grid.GetRow(AppleElement)] = ExtraAppleBoardCode;
+        GameGrid.Children.Add(AppleElement);
+        ExtraApples.Add(AppleElement);
+      }
     }
   }
 }
