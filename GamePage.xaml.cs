@@ -19,6 +19,7 @@ namespace WindowsSnake
     public double Score;
     public TextBlock ScoreText;
     public int ApplesEaten = 0;
+    public List<Image> ExtraApples = new();
 
     public GamePage(MainWindow parentWindow)
     {
@@ -171,6 +172,8 @@ namespace WindowsSnake
         HorizontalAlignment = HorizontalAlignment.Left,
         VerticalAlignment = VerticalAlignment.Center
       };
+
+      AddExtraApples();
 
       _parentWindow.ScorePanel.Children.Add(ScoreText);
     }
@@ -357,7 +360,7 @@ namespace WindowsSnake
 
       try
       {
-        if (BoardArray[HeadX, HeadY] >= 3)//player is on apple
+        if (BoardArray[HeadX, HeadY] == 3)//player is on apple
         {
           int LastBodySegmentX = Grid.GetColumn(_player.Body.Last());
           int LastBodySegmentY = Grid.GetRow(_player.Body.Last());
@@ -398,37 +401,73 @@ namespace WindowsSnake
           }
         }
 
-        if (OccupiedBoardSpaces < _player.Body.Count
-          && !currentSettings.Modifiers.Contains(new ModifierItem
-          {
-            Name = "Overlap",
-            Multiplier = -0.25,
-            IsEnabled = true,
-            Difficulty = "Easy"
-          }) && !currentSettings.Modifiers.Contains(new ModifierItem
-          {
-            Name = "Invincibility",
-            Multiplier = -1000,
-            IsEnabled = true,
-            Difficulty = "Easy"
-          }))
+        ModifierItem Overlap = new ModifierItem
         {
-          if(currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.W.I", Difficulty = "Hard", Multiplier = 0.5, IsEnabled = true}) || currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.U.I", Difficulty = "Insane", Multiplier = 1.0, IsEnabled = true })) _duiTimer.Stop();
+          Name = "Overlap",
+          Multiplier = -0.25,
+          IsEnabled = true,
+          Difficulty = "Easy"
+        };
+        ModifierItem Invincibility = new ModifierItem
+        {
+          Name = "Invincibility",
+          Multiplier = -1000,
+          IsEnabled = true,
+          Difficulty = "Easy"
+        };
+
+        if (OccupiedBoardSpaces < _player.Body.Count 
+          && !currentSettings.Modifiers.Contains(Overlap) 
+          && !currentSettings.Modifiers.Contains(Invincibility))
+        {
+          ModifierItem DWI = new ModifierItem 
+          { 
+            Name = "D.W.I",
+            Difficulty = "Hard",
+            Multiplier = 0.5,
+            IsEnabled = true 
+          };
+          ModifierItem DUI = new ModifierItem 
+          { 
+            Name = "D.U.I",
+            Difficulty = "Insane",
+            Multiplier = 1.0,
+            IsEnabled = true 
+          };
+
+          if (currentSettings.Modifiers.Contains(DWI) || currentSettings.Modifiers.Contains(DUI)) _duiTimer.Stop();
           _moveTimer.Stop();
           HandleLoss();
         }
       }
       catch (Exception) // double check for wall hit
       {
-        if (!currentSettings.Modifiers.Contains(new ModifierItem
+       
+        ModifierItem Invincibility = new ModifierItem
         {
           Name = "Invincibility",
           Multiplier = -1000,
           IsEnabled = true,
           Difficulty = "Easy"
-        }))
+        };
+        if (!currentSettings.Modifiers.Contains(Invincibility))
         {
-          if (currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.W.I", Difficulty = "Hard", Multiplier = 0.5, IsEnabled = true }) || currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.U.I", Difficulty = "Insane", Multiplier = 1.0, IsEnabled = true })) _duiTimer.Stop();
+          ModifierItem DWI = new ModifierItem
+          {
+            Name = "D.W.I",
+            Difficulty = "Hard",
+            Multiplier = 0.5,
+            IsEnabled = true
+          };
+          ModifierItem DUI = new ModifierItem
+          {
+            Name = "D.U.I",
+            Difficulty = "Insane",
+            Multiplier = 1.0,
+            IsEnabled = true
+          };
+
+          if (currentSettings.Modifiers.Contains(DWI) || currentSettings.Modifiers.Contains(DUI)) _duiTimer.Stop();
           _moveTimer.Stop();
           HandleLoss();
         }
@@ -468,7 +507,13 @@ namespace WindowsSnake
       {
         ProjectedAppleX = RandomNumber.Next(0, GameGrid.ColumnDefinitions.Count - 1);
         ProjectedAppleY = RandomNumber.Next(0, GameGrid.RowDefinitions.Count - 1);
-      }while (BoardArray[ProjectedAppleX, ProjectedAppleY] == 1 || BoardArray[ProjectedAppleX, ProjectedAppleY] == 2);
+      }
+      while (BoardArray[ProjectedAppleX, ProjectedAppleY] == 1 
+        || BoardArray[ProjectedAppleX, ProjectedAppleY] == 2 
+        || BoardArray[ProjectedAppleX, ProjectedAppleY] == 3
+        || BoardArray[ProjectedAppleX, ProjectedAppleY] == 4
+        || BoardArray[ProjectedAppleX, ProjectedAppleY] == 5
+      );
 
       Grid.SetColumn(AppleElement, ProjectedAppleX);
       Grid.SetRow(AppleElement, ProjectedAppleY);
