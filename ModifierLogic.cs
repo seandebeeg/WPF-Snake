@@ -200,6 +200,7 @@ namespace WindowsSnake
 
     private void DrunkTurn()
     {
+      IsTurning = true;
       Random TurnNumber = new();
       int Turn = TurnNumber.Next(1, 4);
 

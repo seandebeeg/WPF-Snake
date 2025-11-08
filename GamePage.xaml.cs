@@ -21,7 +21,8 @@ namespace WindowsSnake
     public TextBlock ScoreText;
     public int ApplesEaten = 0;
     public List<Image> ExtraApples = new();
-    public bool IsGrowing = false; 
+    public bool IsGrowing = false;
+    public bool IsTurning = false;
 
     public GamePage(MainWindow parentWindow)
     {
@@ -189,20 +190,26 @@ namespace WindowsSnake
 
     private void TurnPlayer(string Direction)
     {
-      switch (Direction)
+      while (!IsTurning) 
       {
-        case "Right":
-          _player.Direction = 90;
-        break;
-        case "Down":
-          _player.Direction = 180;
-        break;
-        case "Left":
-          _player.Direction = 270;
-        break;
-        case "Up":
-          _player.Direction = 0;
-        break;
+        IsTurning = true;
+        switch (Direction)
+        {
+          case "Right":
+            _player.Direction = 90;
+          break;
+          case "Down":
+            _player.Direction = 180;
+          break;
+          case "Left":
+            _player.Direction = 270;
+          break;
+          case "Up":
+            _player.Direction = 0;
+          break;
+        }
+        IsTurning = false;
+        return;
       }
     }
 
@@ -269,70 +276,74 @@ namespace WindowsSnake
 
     private void MoveBody()
     {
-      List<int> BodySegmentsX = new();
-      List<int> BodySegmentsY = new();
-      
-      int HeadX = Grid.GetColumn(_player.Head);
-      int HeadY = Grid.GetRow(_player.Head);
-      int OldHeadX = HeadX;
-      int OldHeadY = HeadY;
-      int index = 0;
-
-      switch (_player.Direction)
+      while (!IsTurning)
       {
-        case 0:
-          HeadY--;
-          _player.Y--;
-        break;
-        case 90:
-          HeadX++;
-          _player.X++;
-        break;
-        case 180:
-          HeadY++;
-          _player.Y++;
-        break;
-        case 270:
-          HeadX--;
-          _player.X--;
-        break;
-      }
+        List<int> BodySegmentsX = new();
+        List<int> BodySegmentsY = new();
 
-      try
-      { 
-        BoardArray[HeadX, HeadY] += 1;
+        int HeadX = Grid.GetColumn(_player.Head);
+        int HeadY = Grid.GetRow(_player.Head);
+        int OldHeadX = HeadX;
+        int OldHeadY = HeadY;
+        int index = 0;
 
-        Grid.SetColumn(_player.Head, HeadX);
-        Grid.SetRow(_player.Head, HeadY);
-
-        foreach (var BodySegment in _player.Body)
+        switch (_player.Direction)
         {
-          BodySegmentsX.Add(Grid.GetColumn(BodySegment));
-          BodySegmentsY.Add(Grid.GetRow(BodySegment));
-
-          if (index == 0)
-          {
-            BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
-            BoardArray[OldHeadX, OldHeadY] += 1;
-
-            Grid.SetColumn(BodySegment, OldHeadX);
-            Grid.SetRow(BodySegment, OldHeadY);
-          }
-          else
-          {
-            BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
-            BoardArray[BodySegmentsX[index - 1], BodySegmentsY[index - 1]] += 1;
-
-            Grid.SetColumn(BodySegment, BodySegmentsX[index - 1]);
-            Grid.SetRow(BodySegment, BodySegmentsY[index - 1]);
-          }
-
-          index++;
+          case 0:
+            HeadY--;
+            _player.Y--;
+          break;
+          case 90:
+            HeadX++;
+            _player.X++;
+          break;
+          case 180:
+            HeadY++;
+            _player.Y++;
+          break;
+          case 270:
+            HeadX--;
+            _player.X--;
+          break;
         }
-      } 
-      catch(Exception)
-      {
-        CheckForCollision();
+
+        try
+        {
+          BoardArray[HeadX, HeadY] += 1;
+
+          Grid.SetColumn(_player.Head, HeadX);
+          Grid.SetRow(_player.Head, HeadY);
+
+          foreach (var BodySegment in _player.Body)
+          {
+            BodySegmentsX.Add(Grid.GetColumn(BodySegment));
+            BodySegmentsY.Add(Grid.GetRow(BodySegment));
+
+            if (index == 0)
+            {
+              BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
+              BoardArray[OldHeadX, OldHeadY] += 1;
+
+              Grid.SetColumn(BodySegment, OldHeadX);
+              Grid.SetRow(BodySegment, OldHeadY);
+            }
+            else
+            {
+              BoardArray[BodySegmentsX[index], BodySegmentsY[index]] = 0;
+              BoardArray[BodySegmentsX[index - 1], BodySegmentsY[index - 1]] += 1;
+
+              Grid.SetColumn(BodySegment, BodySegmentsX[index - 1]);
+              Grid.SetRow(BodySegment, BodySegmentsY[index - 1]);
+            }
+            index++;
+          }
+          return;
+        }
+        catch (Exception)
+        {
+          CheckForCollision();
+          return;
+        }
       }
     }
 
