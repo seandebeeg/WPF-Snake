@@ -95,17 +95,17 @@ namespace WindowsSnake
             switch (Modifier.Name)
             {
               default:
-                speedMultiplier = 1;
-                break;
+                speedMultiplier += 0;
+              break;
               case "Slowness":
-                speedMultiplier = 0.5;
-                break;
+                speedMultiplier -= 0.5;
+              break;
               case "Fast Speed":
-                speedMultiplier = 2;
-                break;
+                speedMultiplier += 2;
+              break;
               case "Super Speed":
-                speedMultiplier = 4;
-                break;
+                speedMultiplier += 4;
+              break;
             }
             PlayerSpeed = speedMultiplier * defaultSpeed;
           }
@@ -131,7 +131,7 @@ namespace WindowsSnake
           && ApplesEaten % 5 == 0
           && _moveTimer.Interval > TimeSpan.FromMilliseconds(LowestInterval))
       {
-        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - (PlayerSpeed * 0.05);
+        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - 10;
         _moveTimer.Interval = TimeSpan.FromMilliseconds(NewSpeed);
         _moveTimer.Stop();
         _moveTimer.Start();
@@ -145,7 +145,7 @@ namespace WindowsSnake
       })
         && _moveTimer.Interval > TimeSpan.FromMilliseconds(LowestInterval))
       {
-        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - (PlayerSpeed * 0.05);
+        double NewSpeed = _moveTimer.Interval.TotalMilliseconds - 10;
         _moveTimer.Interval = TimeSpan.FromMilliseconds(NewSpeed);
         _moveTimer.Stop();
         _moveTimer.Start();
@@ -200,8 +200,8 @@ namespace WindowsSnake
 
     private void DrunkTurn()
     {
-      IsTurning = true;
       Random TurnNumber = new();
+
       int Turn = TurnNumber.Next(1, 4);
 
       if (Turn == 1 && _player.Direction != 270)
