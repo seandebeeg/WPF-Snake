@@ -21,6 +21,7 @@ namespace WindowsSnake
     public TextBlock ScoreText;
     public int ApplesEaten = 0;
     public List<Image> ExtraApples = new();
+    public bool IsGrowing = false; 
 
     public GamePage(MainWindow parentWindow)
     {
@@ -59,7 +60,6 @@ namespace WindowsSnake
       _moveTimer.Interval = TimeSpan.FromSeconds(1 / PlayerSpeed);
       _moveTimer.Tick += (s, e) => 
       {
-        CheckForCollision();
         MoveBody();
         CheckForCollision();
       };
@@ -332,23 +332,40 @@ namespace WindowsSnake
       } 
       catch(Exception)
       {
-        if(!currentSettings.Modifiers.Contains(new ModifierItem() 
-          { 
-            Difficulty = "Easy",
-            Name = "Invincibility",
-            IsEnabled = true,
-            Multiplier = -1000
-          }))
-        {
-          if (currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.W.I", Difficulty = "Hard", Multiplier = 0.5, IsEnabled = true }) || currentSettings.Modifiers.Contains(new ModifierItem { Name = "D.U.I", Difficulty = "Insane", Multiplier = 1.0, IsEnabled = true })) _duiTimer.Stop();
-          _moveTimer.Stop();
-          HandleLoss();
-        }
-        else
-        {
-          HandleInvincibility();
-        }
+        CheckForCollision();
       }
+    }
+
+    private void HandleGrowth()
+    {
+      IsGrowing = true;
+      int LastBodySegmentX = Grid.GetColumn(_player.Body.Last());
+      int LastBodySegmentY = Grid.GetRow(_player.Body.Last());
+      var BodySegment = new System.Windows.Shapes.Rectangle()
+      {
+        Height = cellSize,
+        Width = cellSize,
+        Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
+      };
+
+      Grid.SetColumn(BodySegment, LastBodySegmentX);
+      Grid.SetRow(BodySegment, LastBodySegmentY);
+
+      _player.Body.Add(BodySegment);
+      GameGrid.Children.Add(BodySegment);
+      BoardArray[LastBodySegmentX, LastBodySegmentY] = 1;
+
+      if (currentSettings.Modifiers.Contains(new ModifierItem
+      {
+        Name = "Double Growth",
+        Multiplier = 0.75,
+        IsEnabled = true,
+        Difficulty = "Insane"
+      }))
+      {
+        ProcessDoubleGrowth();
+      }
+      IsGrowing = false;
     }
 
     private void CheckForCollision() //multi, poison, and decoy yet to be implemented
@@ -356,128 +373,110 @@ namespace WindowsSnake
       int OccupiedBoardSpaces = 0;
       int HeadX = _player.X;
       int HeadY = _player.Y;
-
-      try
+      while (!IsGrowing)
       {
-        if (BoardArray[HeadX, HeadY] == 3)//player is on apple
+        try
         {
-          int LastBodySegmentX = Grid.GetColumn(_player.Body.Last());
-          int LastBodySegmentY = Grid.GetRow(_player.Body.Last());
-          var BodySegment = new System.Windows.Shapes.Rectangle()
+          if (BoardArray[HeadX, HeadY] == 3)//player is on apple
           {
-            Height = cellSize,
-            Width = cellSize,
-            Fill = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(currentSettings.CurrentColor)
-          };
-
-          Grid.SetColumn(BodySegment, LastBodySegmentX);
-          Grid.SetRow(BodySegment, LastBodySegmentY);
-
-          _player.Body.Add(BodySegment);
-          GameGrid.Children.Add(BodySegment);
-          BoardArray[LastBodySegmentX, LastBodySegmentY] = 1;
-
-          if (currentSettings.Modifiers.Contains(new ModifierItem 
-            { Name = "Double Growth",
-              Multiplier = 0.75,
-              IsEnabled = true,
-              Difficulty = "Insane" 
-            }))
-          {
-            ProcessDoubleGrowth();
+            HandleGrowth();
+            ReplaceApple();
+            return;
           }
-          MoveBody();
-          ReplaceApple();
+          else if (BoardArray[HeadX, HeadY] == 4
+            || BoardArray[HeadX, HeadY] == 5
+            || BoardArray[HeadX, HeadY] == 6)
+          {
+            HandleGrowth();
+            ReplaceSpecialApple();
+            return;
+          }
+
+          foreach (int Space in BoardArray)
+          {
+            if (Space == 1)
+            {
+              OccupiedBoardSpaces++;
+            }
+          }
+
+          ModifierItem Overlap = new ModifierItem
+          {
+            Name = "Overlap",
+            Multiplier = -0.25,
+            IsEnabled = true,
+            Difficulty = "Easy"
+          };
+          ModifierItem Invincibility = new ModifierItem
+          {
+            Name = "Invincibility",
+            Multiplier = -1000,
+            IsEnabled = true,
+            Difficulty = "Easy"
+          };
+          if (OccupiedBoardSpaces < _player.Body.Count
+            && !currentSettings.Modifiers.Contains(Overlap)
+            && !currentSettings.Modifiers.Contains(Invincibility))
+          {
+            ModifierItem DWI = new ModifierItem
+            {
+              Name = "D.W.I",
+              Difficulty = "Hard",
+              Multiplier = 0.5,
+              IsEnabled = true
+            };
+            ModifierItem DUI = new ModifierItem
+            {
+              Name = "D.U.I",
+              Difficulty = "Insane",
+              Multiplier = 1.0,
+              IsEnabled = true
+            };
+
+            if (currentSettings.Modifiers.Contains(DWI) || currentSettings.Modifiers.Contains(DUI)) _duiTimer.Stop();
+            _moveTimer.Stop();
+            HandleLoss();
+            return;
+          }
           return;
         }
-        else if (BoardArray[HeadX, HeadY] == 4
-          || BoardArray[HeadX, HeadY] == 5
-          || BoardArray[HeadX, HeadY] == 6)
+        catch (Exception)
         {
-          ReplaceSpecialApple();
-          return;
-        }
 
-        foreach (int Space in BoardArray)
-        {
-          if (Space == 1)
+          ModifierItem Invincibility = new ModifierItem
           {
-            OccupiedBoardSpaces++;
+            Name = "Invincibility",
+            Multiplier = -1000,
+            IsEnabled = true,
+            Difficulty = "Easy"
+          };
+          if (!currentSettings.Modifiers.Contains(Invincibility))
+          {
+            ModifierItem DWI = new ModifierItem
+            {
+              Name = "D.W.I",
+              Difficulty = "Hard",
+              Multiplier = 0.5,
+              IsEnabled = true
+            };
+            ModifierItem DUI = new ModifierItem
+            {
+              Name = "D.U.I",
+              Difficulty = "Insane",
+              Multiplier = 1.0,
+              IsEnabled = true
+            };
+
+            if (currentSettings.Modifiers.Contains(DWI) || currentSettings.Modifiers.Contains(DUI)) _duiTimer.Stop();
+            _moveTimer.Stop();
+            HandleLoss();
+            return;
           }
-        }
-
-        ModifierItem Overlap = new ModifierItem
-        {
-          Name = "Overlap",
-          Multiplier = -0.25,
-          IsEnabled = true,
-          Difficulty = "Easy"
-        };
-        ModifierItem Invincibility = new ModifierItem
-        {
-          Name = "Invincibility",
-          Multiplier = -1000,
-          IsEnabled = true,
-          Difficulty = "Easy"
-        };
-        if (OccupiedBoardSpaces < _player.Body.Count
-          && !currentSettings.Modifiers.Contains(Overlap) 
-          && !currentSettings.Modifiers.Contains(Invincibility))
-        {
-          ModifierItem DWI = new ModifierItem 
-          { 
-            Name = "D.W.I",
-            Difficulty = "Hard",
-            Multiplier = 0.5,
-            IsEnabled = true 
-          };
-          ModifierItem DUI = new ModifierItem 
-          { 
-            Name = "D.U.I",
-            Difficulty = "Insane",
-            Multiplier = 1.0,
-            IsEnabled = true 
-          };
-
-          if (currentSettings.Modifiers.Contains(DWI) || currentSettings.Modifiers.Contains(DUI)) _duiTimer.Stop();
-          _moveTimer.Stop();
-          HandleLoss();
-        }
-      }
-      catch (Exception) // double check for wall hit
-      {
-       
-        ModifierItem Invincibility = new ModifierItem
-        {
-          Name = "Invincibility",
-          Multiplier = -1000,
-          IsEnabled = true,
-          Difficulty = "Easy"
-        };
-        if (!currentSettings.Modifiers.Contains(Invincibility))
-        {
-          ModifierItem DWI = new ModifierItem
+          else
           {
-            Name = "D.W.I",
-            Difficulty = "Hard",
-            Multiplier = 0.5,
-            IsEnabled = true
-          };
-          ModifierItem DUI = new ModifierItem
-          {
-            Name = "D.U.I",
-            Difficulty = "Insane",
-            Multiplier = 1.0,
-            IsEnabled = true
-          };
-
-          if (currentSettings.Modifiers.Contains(DWI) || currentSettings.Modifiers.Contains(DUI)) _duiTimer.Stop();
-          _moveTimer.Stop();
-          HandleLoss();
-        }
-        else
-        {
-          HandleInvincibility();
+            HandleInvincibility();
+            return;
+          }
         }
       }
     }
@@ -485,7 +484,7 @@ namespace WindowsSnake
     private void ReplaceApple()
     {
       ApplesEaten++;
-      Score += (currentSettings.ScoreMultiplier * 100) / 100;
+      Score += Math.Round((currentSettings.ScoreMultiplier * 100) / 100, 2);
 
       AddSpeedOnPoint();
 
@@ -545,18 +544,18 @@ namespace WindowsSnake
 
       if (CurrentScores.Count == 0 || Score >= CurrentScores.Max() )
       {
-        currentSettings.ScoreList.Add(new WindowsSnake.Score() { IsHighScore = true, ScoreNumber = ((float)(Score)), TimeObtained = DateTime.Today.ToString("d") });
+        currentSettings.ScoreList.Add(new WindowsSnake.Score() { IsHighScore = true, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
       }
       else
       {
-        currentSettings.ScoreList.Add(new WindowsSnake.Score { IsHighScore = false, ScoreNumber = ((float)(Score)), TimeObtained = DateTime.Today.ToString("d") });
+        currentSettings.ScoreList.Add(new WindowsSnake.Score { IsHighScore = false, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
       }
       JsonSerializerOptions WriteOptions = new JsonSerializerOptions { WriteIndented = true };
 
       var NewScores = JsonSerializer.Serialize<GameSettings>(currentSettings, WriteOptions);
       File.WriteAllText(settingsPath, NewScores);
 
-      GameOverScoreText.Text = $"You got {((float)(Score))} Point(s)";
+      GameOverScoreText.Text = $"You got {Score} Point(s)";
       LoserPopup.IsOpen = true;
 
     }

@@ -380,12 +380,12 @@ namespace WindowsSnake
 
         if (ExtraAppleBoardCode == 3)
         {
-          Score += (currentSettings.ScoreMultiplier * 100) / 100;
+          Score += Math.Round((currentSettings.ScoreMultiplier * 100) / 100, 2);
           ApplesEaten++;
         }
         else if (ExtraAppleBoardCode == 5)
         {
-          Score -= (currentSettings.ScoreMultiplier * 100) / 100;
+          Score -= Math.Round((currentSettings.ScoreMultiplier * 100) / 100, 2);
         }
 
         ScoreText.Text = ((float)Score).ToString();
