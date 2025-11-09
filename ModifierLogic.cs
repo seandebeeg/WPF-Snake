@@ -29,16 +29,16 @@ namespace WindowsSnake
             {
               default:
                 BoardMultiplier = 1.00;
-                break;
+              break;
               case "Bigger Board":
                 BoardMultiplier = 1.75;
-                break;
+              break;
               case "Small Board":
                 BoardMultiplier = 0.5;
-                break;
+              break;
               case "Tiny Board":
                 BoardMultiplier = 0.25;
-                break;
+              break;
             }
             RowNumber = ((int)(DefaultRows * BoardMultiplier));
             ColumnNumber = ((int)(DefaultColumns * BoardMultiplier));
@@ -206,19 +206,19 @@ namespace WindowsSnake
 
       if (Turn == 1 && _player.Direction != 270)
       {
-        TurnPlayer("Right");
+        TurningQueue.Enqueue("Right");
       }
       else if (Turn == 2 && _player.Direction != 0)
       {
-        TurnPlayer("Down");
+        TurningQueue.Enqueue("Down");
       }
       else if (Turn == 3 && _player.Direction != 90)
       {
-        TurnPlayer("Left");
+        TurningQueue.Enqueue("Left");
       }
       else if (Turn == 4 && _player.Direction != 180)
       {
-        TurnPlayer("Up");
+        TurningQueue.Enqueue("Up");
       }
     }
 
@@ -305,7 +305,6 @@ namespace WindowsSnake
       BoardArray[_player.X, _player.Y] = 1;
       Grid.SetColumn(_player.Head, _player.X);
       Grid.SetRow(_player.Head, _player.Y);
-      GameGrid.Children.Add(_player.Head);
     }
 
     ModifierItem MultipleApples = new ModifierItem
@@ -376,17 +375,17 @@ namespace WindowsSnake
         {
           if (Mod.Name == "Multiple Apples") ExtraAppleBoardCode = 3;
           else if (Mod.Name == "Decoy Apples") ExtraAppleBoardCode = 4;
-          else if (Mod.Name == "PoisonApples") ExtraAppleBoardCode = 5;
+          else if (Mod.Name == "Poison Apples") ExtraAppleBoardCode = 5;
         }
 
         if (ExtraAppleBoardCode == 3)
         {
-          Score += Math.Round((currentSettings.ScoreMultiplier * 100) / 100, 2);
+          Score += Math.Round(currentSettings.ScoreMultiplier, 2);
           ApplesEaten++;
         }
         else if (ExtraAppleBoardCode == 5)
         {
-          Score -= Math.Round((currentSettings.ScoreMultiplier * 100) / 100, 2);
+          Score -= Math.Round(currentSettings.ScoreMultiplier, 2);
         }
 
         ScoreText.Text = ((float)Score).ToString();
@@ -413,15 +412,11 @@ namespace WindowsSnake
 
         do
         {
-          ProjectedAppleX = RandomNumber.Next(0, GameGrid.ColumnDefinitions.Count - 1);
-          ProjectedAppleY = RandomNumber.Next(0, GameGrid.RowDefinitions.Count - 1);
+          ProjectedAppleX = RandomNumber.Next(0, GameGrid.ColumnDefinitions.Count);
+          ProjectedAppleY = RandomNumber.Next(0, GameGrid.RowDefinitions.Count);
         }
-        while (BoardArray[ProjectedAppleX, ProjectedAppleY] == 1
-          || BoardArray[ProjectedAppleX, ProjectedAppleY] == 2
-          || BoardArray[ProjectedAppleX, ProjectedAppleY] == 3
-          || BoardArray[ProjectedAppleX, ProjectedAppleY] == 4
-          || BoardArray[ProjectedAppleX, ProjectedAppleY] == 5
-        );
+        while (BoardArray[ProjectedAppleX, ProjectedAppleY] > 0);
+
         Grid.SetColumn(AppleElement, ProjectedAppleX);
         Grid.SetRow(AppleElement, ProjectedAppleY);
 

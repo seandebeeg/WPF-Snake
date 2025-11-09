@@ -14,15 +14,21 @@ namespace WindowsSnake
     private GameSettings currentSettings;
     private MainWindow _parentWindow;
     private PlayerClass _player;
-    private double cellSize;
+
     private System.Windows.Threading.DispatcherTimer _moveTimer;
     private System.Windows.Threading.DispatcherTimer _duiTimer;
-    public double Score;
-    public TextBlock ScoreText;
+
     public int ApplesEaten = 0;
+    public double Score;
+    private double cellSize;
+
+    public TextBlock ScoreText;
     public List<Image> ExtraApples = new();
+    private Queue<string> TurningQueue = new();
+
     public bool IsGrowing = false;
     public bool IsTurning = false;
+    public bool IsMoving = false;
 
     public GamePage(MainWindow parentWindow)
     {
@@ -61,8 +67,9 @@ namespace WindowsSnake
       _moveTimer.Interval = TimeSpan.FromSeconds(1 / PlayerSpeed);
       _moveTimer.Tick += (s, e) => 
       {
-        MoveBody();
         CheckForCollision();
+        MoveBody();
+        if(TurningQueue.Count > 0) TurnPlayer(TurningQueue.Dequeue());
       };
 
       ProcessDUI();
@@ -190,7 +197,7 @@ namespace WindowsSnake
 
     private void TurnPlayer(string Direction)
     {
-      while (!IsTurning) 
+      while (!IsTurning && !IsMoving) 
       {
         IsTurning = true;
         switch (Direction)
@@ -214,7 +221,6 @@ namespace WindowsSnake
     }
 
     private DateTime _lastTurnTime = DateTime.MinValue;
-    private const double TURN_BUFFER_TIME = 0.05;
     private Key? _bufferedInput;
 
     private void ProcessKeyStrokes(object sender, KeyEventArgs e)
@@ -226,10 +232,6 @@ namespace WindowsSnake
       if (IsValidTurn(PressedKey, _player.Direction))
       {
         _bufferedInput = PressedKey;
-      }
-      if (timeSinceLastTurn < TURN_BUFFER_TIME)
-      {
-        return;
       }
       if (_bufferedInput.HasValue)
       {
@@ -254,22 +256,22 @@ namespace WindowsSnake
     {
       if (pressedKey == Key.Right)
       {
-        TurnPlayer("Right");
+        TurningQueue.Enqueue("Right");
         _lastTurnTime = DateTime.Now;
       }
       else if (pressedKey == Key.Down)
       {
-        TurnPlayer("Down");
+        TurningQueue.Enqueue("Down");
         _lastTurnTime = DateTime.Now;
       }
       else if (pressedKey == Key.Left)
       {
-        TurnPlayer("Left");
+        TurningQueue.Enqueue("Left");
         _lastTurnTime = DateTime.Now;
       }
       else if (pressedKey == Key.Up)
       {
-        TurnPlayer("Up");
+        TurningQueue.Enqueue("Up");
         _lastTurnTime = DateTime.Now;
       }
     }
@@ -278,6 +280,8 @@ namespace WindowsSnake
     {
       while (!IsTurning)
       {
+        IsMoving = true;
+
         List<int> BodySegmentsX = new();
         List<int> BodySegmentsY = new();
 
@@ -337,11 +341,12 @@ namespace WindowsSnake
             }
             index++;
           }
+          IsMoving = false;
           return;
         }
         catch (Exception)
         {
-          CheckForCollision();
+          IsMoving = false;
           return;
         }
       }
@@ -495,7 +500,7 @@ namespace WindowsSnake
     private void ReplaceApple()
     {
       ApplesEaten++;
-      Score += Math.Round((currentSettings.ScoreMultiplier * 100) / 100, 2);
+      Score += Math.Round(currentSettings.ScoreMultiplier , 2);
 
       AddSpeedOnPoint();
 
@@ -519,15 +524,10 @@ namespace WindowsSnake
 
       do
       {
-        ProjectedAppleX = RandomNumber.Next(0, GameGrid.ColumnDefinitions.Count - 1);
-        ProjectedAppleY = RandomNumber.Next(0, GameGrid.RowDefinitions.Count - 1);
+        ProjectedAppleX = RandomNumber.Next(0, GameGrid.ColumnDefinitions.Count);
+        ProjectedAppleY = RandomNumber.Next(0, GameGrid.RowDefinitions.Count);
       }
-      while (BoardArray[ProjectedAppleX, ProjectedAppleY] == 1 
-        || BoardArray[ProjectedAppleX, ProjectedAppleY] == 2 
-        || BoardArray[ProjectedAppleX, ProjectedAppleY] == 3
-        || BoardArray[ProjectedAppleX, ProjectedAppleY] == 4
-        || BoardArray[ProjectedAppleX, ProjectedAppleY] == 5
-      );
+      while (BoardArray[ProjectedAppleX, ProjectedAppleY] > 0 );
 
       Grid.SetColumn(AppleElement, ProjectedAppleX);
       Grid.SetRow(AppleElement, ProjectedAppleY);
@@ -548,18 +548,18 @@ namespace WindowsSnake
         "settings.json"
       );
 
-      foreach (WindowsSnake.Score Entry in currentSettings.ScoreList)
+      foreach (Score Entry in currentSettings.ScoreList)
       {
         CurrentScores.Add(Entry.ScoreNumber);
       }
 
       if (CurrentScores.Count == 0 || Score >= CurrentScores.Max() )
       {
-        currentSettings.ScoreList.Add(new WindowsSnake.Score() { IsHighScore = true, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
+        currentSettings.ScoreList.Add(new Score { IsHighScore = true, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
       }
       else
       {
-        currentSettings.ScoreList.Add(new WindowsSnake.Score { IsHighScore = false, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
+        currentSettings.ScoreList.Add(new Score { IsHighScore = false, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
       }
       JsonSerializerOptions WriteOptions = new JsonSerializerOptions { WriteIndented = true };
 
