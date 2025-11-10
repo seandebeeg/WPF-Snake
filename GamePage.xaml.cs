@@ -68,8 +68,9 @@ namespace WindowsSnake
       _moveTimer.Tick += (s, e) => 
       {
         CheckForCollision();
+        if (TurningQueue.Count > 0 && IsValidTurn(TurningQueue.First(), _player.Direction)) TurnPlayer(TurningQueue.Dequeue());
         MoveBody();
-        if(TurningQueue.Count > 0) TurnPlayer(TurningQueue.Dequeue());
+        if(TurningQueue.Count > 0 && IsValidTurn(TurningQueue.First(), _player.Direction)) TurnPlayer(TurningQueue.Dequeue());
       };
 
       ProcessDUI();
@@ -229,7 +230,7 @@ namespace WindowsSnake
       var currentTime = DateTime.Now;
       var timeSinceLastTurn = (currentTime - _lastTurnTime).TotalSeconds;
 
-      if (IsValidTurn(PressedKey, _player.Direction))
+      if (IsValidTurn(PressedKey.ToString(), _player.Direction))
       {
         _bufferedInput = PressedKey;
       }
@@ -240,14 +241,14 @@ namespace WindowsSnake
       }
     }
 
-    private bool IsValidTurn(Key pressedKey, int currentDirection)
+    private bool IsValidTurn(string TurnDirection, int currentDirection)
     {
-      return pressedKey switch
+      return TurnDirection switch
       {
-        Key.Right => currentDirection != 270,
-        Key.Down => currentDirection != 0,
-        Key.Left => currentDirection != 90,
-        Key.Up => currentDirection != 180,
+        "Right" => currentDirection != 270,
+        "Down" => currentDirection != 0,
+        "Left" => currentDirection != 90,
+        "Up" => currentDirection != 180,
         _ => false
       };
     }
@@ -273,6 +274,16 @@ namespace WindowsSnake
       {
         TurningQueue.Enqueue("Up");
         _lastTurnTime = DateTime.Now;
+      }
+
+      if(TurningQueue.Count > 6)
+      {
+        Queue<string> NewTurningQueue = new();
+        for (int i = TurningQueue.Count; i > 5; i--)
+        {
+          NewTurningQueue.Enqueue(TurningQueue.Dequeue());
+        }
+        TurningQueue = NewTurningQueue;
       }
     }
 
@@ -555,11 +566,11 @@ namespace WindowsSnake
 
       if (CurrentScores.Count == 0 || Score >= CurrentScores.Max() )
       {
-        currentSettings.ScoreList.Add(new Score { IsHighScore = true, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
+        currentSettings.ScoreList.Add(new Score { IsHighScore = true, ScoreNumber = Math.Round(Score, 2), TimeObtained = DateTime.Today.ToString("d") });
       }
       else
       {
-        currentSettings.ScoreList.Add(new Score { IsHighScore = false, ScoreNumber = Score, TimeObtained = DateTime.Today.ToString("d") });
+        currentSettings.ScoreList.Add(new Score { IsHighScore = false, ScoreNumber = Math.Round(Score, 2), TimeObtained = DateTime.Today.ToString("d") });
       }
       JsonSerializerOptions WriteOptions = new JsonSerializerOptions { WriteIndented = true };
 
