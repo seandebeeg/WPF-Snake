@@ -5,7 +5,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows;
-using System.Diagnostics;
 
 namespace WindowsSnake
 {
@@ -68,9 +67,14 @@ namespace WindowsSnake
       _moveTimer.Tick += (s, e) => 
       {
         CheckForCollision();
+
         if (TurningQueue.Count > 0 && IsValidTurn(TurningQueue.First(), _player.Direction)) TurnPlayer(TurningQueue.Dequeue());
+        else if (TurningQueue.Count > 0 && !IsValidTurn(TurningQueue.First(), _player.Direction)) TurningQueue.Dequeue();
+
         MoveBody();
+
         if(TurningQueue.Count > 0 && IsValidTurn(TurningQueue.First(), _player.Direction)) TurnPlayer(TurningQueue.Dequeue());
+        else if (TurningQueue.Count > 0 && !IsValidTurn(TurningQueue.First(), _player.Direction)) TurningQueue.Dequeue();
       };
 
       ProcessDUI();
@@ -178,7 +182,7 @@ namespace WindowsSnake
 
       ScoreText = new TextBlock
       {
-        Text =": 0",
+        Text =" 0",
         FontSize = 35,
         HorizontalAlignment = HorizontalAlignment.Left,
         VerticalAlignment = VerticalAlignment.Center
@@ -296,38 +300,32 @@ namespace WindowsSnake
         List<int> BodySegmentsX = new();
         List<int> BodySegmentsY = new();
 
-        int HeadX = Grid.GetColumn(_player.Head);
-        int HeadY = Grid.GetRow(_player.Head);
-        int OldHeadX = HeadX;
-        int OldHeadY = HeadY;
+        int OldHeadX = _player.X;
+        int OldHeadY = _player.Y;
         int index = 0;
 
         switch (_player.Direction)
         {
           case 0:
-            HeadY--;
             _player.Y--;
           break;
           case 90:
-            HeadX++;
             _player.X++;
           break;
           case 180:
-            HeadY++;
             _player.Y++;
           break;
           case 270:
-            HeadX--;
             _player.X--;
           break;
         }
 
         try
         {
-          BoardArray[HeadX, HeadY] += 1;
+          BoardArray[_player.X, _player.Y] += 1;
 
-          Grid.SetColumn(_player.Head, HeadX);
-          Grid.SetRow(_player.Head, HeadY);
+          Grid.SetColumn(_player.Head, _player.X);
+          Grid.SetRow(_player.Head, _player.Y);
 
           foreach (var BodySegment in _player.Body)
           {
@@ -577,7 +575,7 @@ namespace WindowsSnake
       var NewScores = JsonSerializer.Serialize<GameSettings>(currentSettings, WriteOptions);
       File.WriteAllText(settingsPath, NewScores);
 
-      GameOverScoreText.Text = $"You got {Score} Point(s)";
+      GameOverScoreText.Text = $"You got {Math.Round(Score, 2)} Point(s)";
       LoserPopup.IsOpen = true;
 
     }
