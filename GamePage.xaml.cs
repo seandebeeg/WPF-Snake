@@ -202,7 +202,7 @@ namespace WindowsSnake
 
     private void TurnPlayer(string Direction)
     {
-      while (!IsTurning && !IsMoving) 
+      if (!IsTurning && !IsMoving) 
       {
         IsTurning = true;
         switch (Direction)
@@ -259,41 +259,44 @@ namespace WindowsSnake
 
     private void ProcessTurn(Key pressedKey)
     {
-      if (pressedKey == Key.Right)
-      {
-        TurningQueue.Enqueue("Right");
-        _lastTurnTime = DateTime.Now;
-      }
-      else if (pressedKey == Key.Down)
-      {
-        TurningQueue.Enqueue("Down");
-        _lastTurnTime = DateTime.Now;
-      }
-      else if (pressedKey == Key.Left)
-      {
-        TurningQueue.Enqueue("Left");
-        _lastTurnTime = DateTime.Now;
-      }
-      else if (pressedKey == Key.Up)
-      {
-        TurningQueue.Enqueue("Up");
-        _lastTurnTime = DateTime.Now;
-      }
-
-      if(TurningQueue.Count > 6)
-      {
-        Queue<string> NewTurningQueue = new();
-        for (int i = TurningQueue.Count; i > 5; i--)
+      if (!IsMoving) 
+      { 
+        if (pressedKey == Key.Right)
         {
-          NewTurningQueue.Enqueue(TurningQueue.Dequeue());
+          TurningQueue.Enqueue("Right");
+          _lastTurnTime = DateTime.Now;
         }
-        TurningQueue = NewTurningQueue;
+        else if (pressedKey == Key.Down)
+        {
+          TurningQueue.Enqueue("Down");
+          _lastTurnTime = DateTime.Now;
+        }
+        else if (pressedKey == Key.Left)
+        {
+          TurningQueue.Enqueue("Left");
+          _lastTurnTime = DateTime.Now;
+        }
+        else if (pressedKey == Key.Up)
+        {
+          TurningQueue.Enqueue("Up");
+          _lastTurnTime = DateTime.Now;
+        }
+
+        if (TurningQueue.Count > 6)
+        {
+          Queue<string> NewTurningQueue = new();
+          for (int i = TurningQueue.Count; i > 5; i--)
+          {
+            NewTurningQueue.Enqueue(TurningQueue.Dequeue());
+          }
+          TurningQueue = NewTurningQueue;
+        }
       }
     }
 
     private void MoveBody()
     {
-      while (!IsTurning)
+      if (!IsTurning)
       {
         IsMoving = true;
 
@@ -364,6 +367,7 @@ namespace WindowsSnake
     private void HandleGrowth()
     {
       IsGrowing = true;
+
       int LastBodySegmentX = Grid.GetColumn(_player.Body.Last());
       int LastBodySegmentY = Grid.GetRow(_player.Body.Last());
       var BodySegment = new System.Windows.Shapes.Rectangle()
@@ -398,25 +402,26 @@ namespace WindowsSnake
       int OccupiedBoardSpaces = 0;
       int HeadX = _player.X;
       int HeadY = _player.Y;
-      while (!IsGrowing)
-      {
-        try
-        {
-          if (BoardArray[HeadX, HeadY] == 3)//player is on apple
-          {
-            HandleGrowth();
-            ReplaceApple();
-            return;
-          }
-          else if (BoardArray[HeadX, HeadY] == 4
-            || BoardArray[HeadX, HeadY] == 5
-            || BoardArray[HeadX, HeadY] == 6)
-          {
-            HandleGrowth();
-            ReplaceSpecialApple();
-            return;
-          }
 
+      try
+      {
+        if (BoardArray[HeadX, HeadY] == 3)//player is on apple
+        {
+          HandleGrowth();
+          ReplaceApple();
+          return;
+        }
+        else if (BoardArray[HeadX, HeadY] == 4
+          || BoardArray[HeadX, HeadY] == 5
+          || BoardArray[HeadX, HeadY] == 6)
+        {
+          HandleGrowth();
+          ReplaceSpecialApple();
+          return;
+        }
+
+        if (!IsGrowing)
+        {
           foreach (int Space in BoardArray)
           {
             if (Space == 1)
@@ -439,6 +444,7 @@ namespace WindowsSnake
             IsEnabled = true,
             Difficulty = "Easy"
           };
+
           if (OccupiedBoardSpaces < _player.Body.Count
             && !currentSettings.Modifiers.Contains(Overlap)
             && !currentSettings.Modifiers.Contains(Invincibility))
@@ -465,43 +471,44 @@ namespace WindowsSnake
           }
           return;
         }
-        catch (Exception)
+      }
+      catch (Exception)
+      {
+
+        ModifierItem Invincibility = new ModifierItem
         {
+          Name = "Invincibility",
+          Multiplier = -1000,
+          IsEnabled = true,
+          Difficulty = "Easy"
+        };
 
-          ModifierItem Invincibility = new ModifierItem
+        if (!currentSettings.Modifiers.Contains(Invincibility))
+        {
+          ModifierItem DWI = new ModifierItem
           {
-            Name = "Invincibility",
-            Multiplier = -1000,
-            IsEnabled = true,
-            Difficulty = "Easy"
+            Name = "D.W.I",
+            Difficulty = "Hard",
+            Multiplier = 0.5,
+            IsEnabled = true
           };
-          if (!currentSettings.Modifiers.Contains(Invincibility))
+          ModifierItem DUI = new ModifierItem
           {
-            ModifierItem DWI = new ModifierItem
-            {
-              Name = "D.W.I",
-              Difficulty = "Hard",
-              Multiplier = 0.5,
-              IsEnabled = true
-            };
-            ModifierItem DUI = new ModifierItem
-            {
-              Name = "D.U.I",
-              Difficulty = "Insane",
-              Multiplier = 1.0,
-              IsEnabled = true
-            };
+            Name = "D.U.I",
+            Difficulty = "Insane",
+            Multiplier = 1.0,
+            IsEnabled = true
+          };
 
-            if (currentSettings.Modifiers.Contains(DWI) || currentSettings.Modifiers.Contains(DUI)) _duiTimer.Stop();
-            _moveTimer.Stop();
-            HandleLoss();
-            return;
-          }
-          else
-          {
-            HandleInvincibility();
-            return;
-          }
+          if (currentSettings.Modifiers.Contains(DWI) || currentSettings.Modifiers.Contains(DUI)) _duiTimer.Stop();
+          _moveTimer.Stop();
+          HandleLoss();
+          return;
+        }
+        else
+        {
+          HandleInvincibility();
+          return;
         }
       }
     }
