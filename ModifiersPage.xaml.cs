@@ -51,6 +51,7 @@ namespace WindowsSnake
       view.GroupDescriptions.Add(new PropertyGroupDescription("Difficulty"));
       ModifiersListView.ItemsSource = view;
       LoadSettings();
+      ScoreMultiplierText.Text = _settings.Multiplier.ToString() + "x";
     }
 
     private void MainMenu_Click(object sender, RoutedEventArgs e)
