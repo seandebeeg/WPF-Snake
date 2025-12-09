@@ -51,7 +51,7 @@ namespace WindowsSnake
       view.GroupDescriptions.Add(new PropertyGroupDescription("Difficulty"));
       ModifiersListView.ItemsSource = view;
       LoadSettings();
-      ScoreMultiplierText.Text = _settings.Multiplier.ToString() + "x";
+      ScoreMultiplierText.Text = _settings.ScoreMultiplier.ToString() + "x";
     }
 
     private void MainMenu_Click(object sender, RoutedEventArgs e)
@@ -116,7 +116,7 @@ namespace WindowsSnake
         {
           var loadedSettings = JsonSerializer.Deserialize<GameSettings>(
           File.ReadAllText(settingsPath));
-
+          _settings.ScoreMultiplier = loadedSettings.ScoreMultiplier;
           if (loadedSettings?.Modifiers != null)
           {
             foreach (var modifier in _modifiers)
