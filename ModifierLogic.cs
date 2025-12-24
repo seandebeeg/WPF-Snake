@@ -94,9 +94,6 @@ namespace WindowsSnake
           {
             switch (Modifier.Name)
             {
-              default:
-                speedMultiplier += 0;
-              break;
               case "Slowness":
                 speedMultiplier -= 0.5;
               break;
@@ -106,12 +103,11 @@ namespace WindowsSnake
               case "Super Speed":
                 speedMultiplier += 4;
               break;
+              default:
+                speedMultiplier += 0;
+              break;
             }
             PlayerSpeed = speedMultiplier * defaultSpeed;
-          }
-          else
-          {
-            PlayerSpeed = defaultSpeed;
           }
         }
       }
