@@ -28,14 +28,14 @@
         <TextBlock Text="Small Board (+0.25x) halves board size" Margin="0,5,0,0" HorizontalAlignment="Center"/>
         <TextBlock Text="Decoy Apples (+0.35x) Shows fake apples on the board" Margin="0,5,0,0" HorizontalAlignment="Center"/>
         <TextBlock Text="Speed Boost Every 5 Points (+0.45x)" Margin="0,5,0,0" HorizontalAlignment="Center"/>
-        <TextBlock Text="D.W.I (+0.5x) randomly turn every 5-10 seconds" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+        <TextBlock Text="D.W.I (+0.5x) randomly turn every 5-10 seconds and maybe crash" Margin="0,5,0,0" HorizontalAlignment="Center"/>
         <TextBlock Text="INSANE" FontSize="20" HorizontalAlignment="Center"/>
         <TextBlock Text="Super Speed (+0.85x) quadruples speed" Margin="0,5,0,0" HorizontalAlignment="Center"/>
         <TextBlock Text="Tiny Board (+0.5x) quarters the board" Margin="0,5,0,0" HorizontalAlignment="Center"/>
         <TextBlock Text="Poison Apples (+0.5x) If you touch the fake apples your score reduces" Margin="0,0,0,0" HorizontalAlignment="Center"/>
-        <TextBlock Text="Double Growth (+0.75)" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+        <TextBlock Text="Double Growth (+0.75) apples double growth and push you foreward" Margin="0,5,0,0" HorizontalAlignment="Center"/>
         <TextBlock Text="Speed Boost Every Point (+0.9x)" Margin="0,5,0,0" HorizontalAlignment="Center"/>
-        <TextBlock Text="D.U.I (+1.0x) randomly turn every 1-4 seconds" Margin="0,5,0,0" HorizontalAlignment="Center"/>
+        <TextBlock Text="D.U.I (+1.0x) randomly turn every 1-4 seconds and maybe crash" Margin="0,5,0,0" HorizontalAlignment="Center"/>
       </StackPanel>
     </ScrollViewer>
     <Button Grid.Row="2" Height="38px" Width="100px" Content="Back to Modifiers" Click="Modifiers_Click" Style="{StaticResource WindowButtonTriggers}" Background="#FFEB3A3A" Foreground="White" FontWeight="Bold"/>
